@@ -2,7 +2,7 @@ package control;
 
 import java.util.Optional;
 
-//import application.AlbumInfo;
+//import application.AlbumInfo; //TODO: make AlbumInfo class to get name, # of photos, and date range
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -59,11 +59,7 @@ public class AlbumDisplayController {
 		//checks if there is text in search bar
 		//alert dialogue if no user input was entered
 		if (searchBar.getText().equals("")) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Error");
-			alert.setHeaderText("Invalid Search");
-			alert.setContentText("Please try again.");
-			alert.showAndWait();
+			errorMessage();
 		}
 		//go to search scene
 		else {
@@ -83,11 +79,18 @@ public class AlbumDisplayController {
 		dialog.setTitle("New Album");
 		dialog.setHeaderText("New Album");
 		dialog.setContentText("Enter name for new album:");
-		
 		Optional<String> result = dialog.showAndWait();
+		
+		//if okay is clicked
 		if (result.isPresent()){
+			//if there is no user input, alert for invalid input
+			if (result.get().equals("")) {
+				errorMessage();
+			}
 			//TODO: add album to list
-		    System.out.println("album name: " + result.get());
+			else {
+				System.out.println("album name: " + result.get());
+			}
 		}
 	}
 	
@@ -99,15 +102,21 @@ public class AlbumDisplayController {
 		dialog.setTitle("Rename Album");
 		dialog.setHeaderText("Rename Album");
 		dialog.setContentText("Enter new name for album:");
-		
 		Optional<String> result = dialog.showAndWait();
+		
+		//if okay is clicked
 		if (result.isPresent()){
+			if (result.get().equals("")) {
+				errorMessage();
+			}
 			//TODO: rename album in the list
-		    System.out.println("album name: " + result.get());
+			else{
+				System.out.println("album name: " + result.get());
+			}
 		}
 	}
 	
-	
+	//delete album button - deletes selected album
 	public void deleteAlbumButton(ActionEvent event){
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Delete Album");
@@ -117,8 +126,17 @@ public class AlbumDisplayController {
 		if (result.get() == ButtonType.OK){
 		    //TODO: delete album of ok is clicked
 		} else {
-		    //TODO: cancel action if cancel is clicked or window is exited
+		    //TODO: if cancel button is clicked (I don't think we have to put anything here but not sure rn)
 		}
+	}
+	
+	//error alert for invalid inputs
+	public void errorMessage() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("Invalid Input");
+		alert.setContentText("Please try again.");
+		alert.showAndWait();
 	}
 	
 }
