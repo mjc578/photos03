@@ -87,6 +87,7 @@ public class AlbumDisplayController {
 			if (result.get().equals("")) {
 				errorMessage();
 			}
+			//TODO: if album name already exists, send error message
 			//TODO: add album to list
 			else {
 				System.out.println("album name: " + result.get());
@@ -109,6 +110,7 @@ public class AlbumDisplayController {
 			if (result.get().equals("")) {
 				errorMessage();
 			}
+			//TODO: if album name already exists, send error message
 			//TODO: rename album in the list
 			else{
 				System.out.println("album name: " + result.get());
