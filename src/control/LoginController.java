@@ -18,29 +18,33 @@ public class LoginController {
 	@FXML private Button loginButton;
 	@FXML private TextField username;
 	
+	//first thing that happens when scene is loaded
+	public void initialize() {
+		loginButton.setDisable(true);
+		
+		username.textProperty().addListener((observable, oldValue, newValue) -> {
+		    if (username.getText().trim().isEmpty()) {
+		    	loginButton.setDisable(true);
+		    }
+		    else {
+		    	loginButton.setDisable(false);
+		    }
+		});
+	}
+	
 	//Login Button 
 	public void loginButton(ActionEvent event) throws Exception {
-		//checks if username was inputed
-		//alert dialogue if no username was entered
-		if (username.getText().equals("")) {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Error");
-			alert.setHeaderText("Invalid Username");
-			alert.setContentText("Please try again.");
-			alert.showAndWait();
-		}
 		//go to album display scene 
-		else {
-			//TODO: store username and user info somehow
-			Parent albumDisplayParent = FXMLLoader.load(getClass().getResource("/view/AlbumDisplay.fxml"));
-			Scene albumDisplayScene = new Scene(albumDisplayParent,900,600);
-			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
-			window.setScene(albumDisplayScene);
-			window.setTitle("Album Display");
-			window.show();
-		}
-		
-		
+		//TODO: store username and user info somehow
+		Parent albumDisplayParent = FXMLLoader.load(getClass().getResource("/view/AlbumDisplay.fxml"));
+		Scene albumDisplayScene = new Scene(albumDisplayParent,900,600);
+		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
+		window.setScene(albumDisplayScene);
+		window.setTitle("Album Display");
+		window.show();
 	}
+		
+		
+	
 
 }

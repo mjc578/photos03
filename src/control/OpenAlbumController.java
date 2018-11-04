@@ -32,6 +32,10 @@ public class OpenAlbumController {
 	@FXML private Label caption;
 	@FXML private Label albumName;
 	
+	//first thing that happens when scene is loaded
+	public void initialize() {
+		
+	}
 	
 	//back button takes you back to Album Display scene
 	public void backButton(ActionEvent event) throws Exception{

@@ -27,6 +27,13 @@ public class EditController {
 	@FXML private TextArea editCaption;
 	@FXML private Button confirmButton;
 	@FXML private Button cancelButton;
+	@FXML private Button nextPhotoButton;
+	@FXML private Button previousPhotoButton;
+	
+	//first thing that happens when scene is loaded
+	public void initialize() {
+		
+	}
 	
 	//delete button
 	public void deleteTagButton(ActionEvent event) {

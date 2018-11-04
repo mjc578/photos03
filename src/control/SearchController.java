@@ -21,6 +21,10 @@ public class SearchController {
 	@FXML private Button nextPhotoButton;
 	@FXML private Button backButton;
 	
+	//first thing that happens when scene is loaded
+	public void initialize() {
+		
+	}
 	
 	//back button to go back to album display scene
 	public void backButton(ActionEvent event) throws Exception {
