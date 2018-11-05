@@ -1,10 +1,12 @@
 package control;
 
 import java.awt.TextArea;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import customTypes.Tag;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -15,11 +17,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 
-public class EditController {
+public class EditController implements Serializable {
 
 	@FXML private Button deleteTagButton;
 	@FXML private Button addTagButton;
@@ -29,10 +32,15 @@ public class EditController {
 	@FXML private Button cancelButton;
 	@FXML private Button nextPhotoButton;
 	@FXML private Button previousPhotoButton;
+	@FXML private ListView<String> tagListView;
+	
+	private List<String> tagTypes = new ArrayList<String>();
+	private List<Tag> tags = new ArrayList<Tag>();
 	
 	//first thing that happens when scene is loaded
 	public void initialize() {
-		
+		tagTypes.add("Person");
+		tagTypes.add("Location");
 	}
 	
 	//delete button
@@ -50,15 +58,9 @@ public class EditController {
 	}
 	
 	//add tag button
-	public void addTagButton(ActionEvent event) {
-		List<String> choices = new ArrayList<>();
-		//TODO: The choices should be the tag-types.
-		choices.add("a");
-		choices.add("b");
-		choices.add("c");
-		
+	public void addTagButton(ActionEvent event) {		
 		//Choice Dialog to choose out of existing tag types
-		ChoiceDialog<String> dialog = new ChoiceDialog<>("b", choices);
+		ChoiceDialog<String> dialog = new ChoiceDialog<>(tagTypes.get(0), tagTypes);
 		dialog.setTitle("New Tag");
 		dialog.setHeaderText("Choose the tag-type for your new tag.");
 		dialog.setContentText("Tag-Types:");
@@ -66,7 +68,7 @@ public class EditController {
 		
 		//if okay is clicked
 		if (result.isPresent()){
-		    System.out.println("Your choice: " + result.get());
+		    
 		    //Text Input Dialog for new tag name after the tag type is selected
 		    TextInputDialog dialog2 = new TextInputDialog();
 			dialog2.setTitle("New Tag");
@@ -83,7 +85,8 @@ public class EditController {
 				//TODO: if tag already exists, send error message
 				//TODO: add tag to tag list
 				else {
-					System.out.println("Your name: " + result2.get());
+					Tag t = new Tag(result.get(), result2.get());
+					
 				}
 			}
 		}	
@@ -106,7 +109,8 @@ public class EditController {
 			//TODO: if tag already exists, send error message
 			//TODO: add tag-type
 			else {
-				System.out.println("album name: " + result.get());
+				//adds tag type
+				tagTypes.add(result.get());
 			}
 		}
 
