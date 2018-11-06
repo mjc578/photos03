@@ -1,4 +1,4 @@
-package customTypes;
+package photos;
 
 //class meant to represent a Tag object
 public class Tag {
