@@ -1,6 +1,6 @@
 package photos;
 
-public class AlbumInfo {
+public class AlbumInfo{
 	
 	private String name;
 	private int numPhotos;
@@ -38,5 +38,11 @@ public class AlbumInfo {
 	public void setEndDateRange(String endDateRange) {
 		this.endDateRange = endDateRange;
 	}
+	
+	@Override
+    public String toString() {
+		return this.getName() + " - " + this.getNumPhotos() + " photos - starting " + this.getStartDateRange()+ " to " + this.getEndDateRange();
+    }
+
 
 }

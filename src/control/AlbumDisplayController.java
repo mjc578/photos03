@@ -1,9 +1,13 @@
 package control;
 
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
+import javafx.application.Application;
 import javafx.collections.FXCollections;
-//import application.AlbumInfo; //TODO: make AlbumInfo class to get name, # of photos, and date range
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -21,7 +25,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import photos.AlbumInfo;
 
-public class AlbumDisplayController {
+public class AlbumDisplayController extends Application implements Serializable {
 
 	@FXML private Button openAlbumButton;
 	@FXML private Button newAlbumButton;
@@ -31,25 +35,28 @@ public class AlbumDisplayController {
 	@FXML private Button logOutButton;
 	@FXML private TextField searchBar;
 	
+	
+	private AlbumInfo albumInfo;
 	@FXML ListView<AlbumInfo> listView;
 	private ObservableList<AlbumInfo> obsList;
 	
 	
-	//first thing that happens when scene is loaded
-	public void initialize() {
-		/* ERROR HAPPENS HERE IDK WHY YET also i think we need a listener
+	
+	//first thing that happens when scene is loaded (must extend Application in class)
+	@Override
+	public void start(Stage arg0) {
+		
 		obsList = FXCollections.observableArrayList();
+		
+		
 		listView.setItems(obsList);
-		
-		if (obsList != null && obsList.isEmpty()) {
-			openAlbumButton.setDisable(true);
-			renameAlbumButton.setDisable(true);
-			deleteAlbumButton.setDisable(true);
-		}
-		*/
-		
 	
 	}
+		
+	
+	
+	
+	
 	
 	//log out button takes you back to login scene
 	public void logOutButton(ActionEvent event) throws Exception {
@@ -110,11 +117,8 @@ public class AlbumDisplayController {
 			//TODO: add album to list
 			else {
 				System.out.println("album name: " + result.get());
-				obsList = FXCollections.observableArrayList();
-				listView.setItems(obsList);
-				
-				
-				
+				AlbumInfo albumInfo = new AlbumInfo((String)result.get(), 0, null, null);
+				obsList.add(albumInfo);	
 			}
 		}
 	}
@@ -156,6 +160,9 @@ public class AlbumDisplayController {
 		}
 	}
 	
+
+	
+	
 	//error alert for invalid inputs
 	public void errorMessage() {
 		Alert alert = new Alert(AlertType.ERROR);
@@ -164,5 +171,6 @@ public class AlbumDisplayController {
 		alert.setContentText("Please try again.");
 		alert.showAndWait();
 	}
+
 	
 }
