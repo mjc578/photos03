@@ -6,6 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javafx.application.Application;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -20,6 +23,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+import photos.Photo;
 import photos.Tag;
 
 public class EditController implements Serializable {
@@ -32,16 +36,23 @@ public class EditController implements Serializable {
 	@FXML private Button cancelButton;
 	@FXML private Button nextPhotoButton;
 	@FXML private Button previousPhotoButton;
-	@FXML private ListView<String> tagListView;
+	@FXML private ListView<Tag> editTagListView;
+	@FXML private ListView<Tag> photoTagListView;
 	
 	private List<String> tagTypes = new ArrayList<String>();
-	private List<Tag> tags = new ArrayList<Tag>();
+	private Photo photoClicked = new Photo("deepel", "bobby");
+	private ObservableList<Tag> obsList = FXCollections.observableArrayList(photoClicked.getTags());
 	
-	//first thing that happens when scene is loaded
-	public void initialize() {
+	public void initialize(){
+		// TODO Auto-generated method stub
+		System.out.println("poop");
 		tagTypes.add("Person");
 		tagTypes.add("Location");
+		System.out.println(photoClicked.getTags().size());
+		editTagListView.setItems(obsList);
+		photoTagListView.setItems(obsList);
 	}
+	
 	
 	//delete button
 	public void deleteTagButton(ActionEvent event) {
@@ -86,7 +97,7 @@ public class EditController implements Serializable {
 				//TODO: add tag to tag list
 				else {
 					Tag t = new Tag(result.get(), result2.get());
-					
+					obsList.add(t);
 				}
 			}
 		}	
@@ -141,5 +152,8 @@ public class EditController implements Serializable {
 		alert.setContentText("Please try again.");
 		alert.showAndWait();
 	}
+
+
+
 	
 }

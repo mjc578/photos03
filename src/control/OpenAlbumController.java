@@ -128,7 +128,8 @@ public class OpenAlbumController {
 	// edit button - takes you to edit scene
 	// edit scene allows you to edit caption, add tags, add tag-types, and delete tags
 	public void editButton(ActionEvent event) throws Exception{
-		Parent root = FXMLLoader.load(getClass().getResource("/view/Edit.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Edit.fxml"));
+		Parent root = loader.load();
 		Scene EditScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
 		window.setScene(EditScene);

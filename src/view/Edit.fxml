@@ -59,7 +59,7 @@
       <Label layoutX="469.0" layoutY="410.0" text="Caption:" />
       <Label alignment="TOP_LEFT" layoutX="540.0" layoutY="410.0" prefHeight="17.0" prefWidth="342.0" />
       <Label layoutX="469.0" layoutY="440.0" text="Tags:" />
-      <ListView fx:id="TagListView" layoutX="540.0" layoutY="440.0" prefHeight="82.0" prefWidth="342.0" />
+      <ListView fx:id="photoTagListView" layoutX="540.0" layoutY="440.0" prefHeight="82.0" prefWidth="342.0" />
       <Label layoutX="17.0" layoutY="76.0" text="Caption:">
          <font>
             <Font size="14.0" />
@@ -71,7 +71,7 @@
          </font>
       </Label>
       <TextArea layoutX="84.0" layoutY="76.0" prefHeight="108.0" prefWidth="342.0" wrapText="true" />
-      <ListView layoutX="84.0" layoutY="215.0" prefHeight="302.0" prefWidth="200.0" />
+      <ListView fx:id="editTagListView" layoutX="84.0" layoutY="215.0" prefHeight="302.0" prefWidth="200.0" />
       <Button fx:id="addTagButton" layoutX="320.0" layoutY="270.0" mnemonicParsing="false" onAction="#addTagButton" prefHeight="35.0" prefWidth="95.0" text="Add Tag" />
       <Button fx:id="deleteTagButton" layoutX="320.0" layoutY="350.0" mnemonicParsing="false" onAction="#deleteTagButton" prefHeight="35.0" prefWidth="95.0" text="Delete Tag" />
       <Button fx:id="addTagTypeButton" layoutX="320.0" layoutY="430.0" mnemonicParsing="false" onAction="#addTagTypeButton" prefHeight="35.0" prefWidth="95.0" text="Add Tag-Type" />

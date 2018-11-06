@@ -2,19 +2,21 @@ package photos;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 public class Photo implements Serializable{
 	
-	private ArrayList<Tag> tags;
+	private List<Tag> tags;
 	private String caption;
 	private String date;
 	
 	public Photo (String caption, String date) {
 		this.caption = caption;
 		this.date = date;
+		tags = new ArrayList<Tag>();
 	}
 	
-	public ArrayList<Tag> getTags() {
+	public List<Tag> getTags() {
 		return tags;
 	}
 	
