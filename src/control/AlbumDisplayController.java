@@ -4,7 +4,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-
 import javafx.application.Application;
 import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
@@ -37,23 +36,25 @@ public class AlbumDisplayController implements Serializable {
 	@FXML private TextField searchBar;
 	@FXML private ListView<AlbumInfo> albumList;
 	
-	private AlbumInfo albumInfo = new AlbumInfo(null, 0, null, null);
-	private ObservableList<AlbumInfo> obsList = FXCollections.observableArrayList(albumInfo);
-
-	
-	
+	private AlbumInfo albumInfo;
+	private ObservableList<AlbumInfo> obsList;
 	
 	//first thing that happens when scene is loaded (must extend Application in class)
 	public void initialize() {
+		obsList = FXCollections.observableArrayList();
 		albumList.setItems(obsList);
-
-	}
 		
+		albumInfo = new AlbumInfo("Stock", 5, null, null);
+		obsList.add(albumInfo);
 
+		if (obsList.isEmpty() && obsList != null) {
+			disable();
+		}
+		
+		albumList.getSelectionModel().select(0);
 	
-	
-	
-	
+	}
+
 	//log out button takes you back to login scene
 	public void logOutButton(ActionEvent event) throws Exception {
 		Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
@@ -109,12 +110,19 @@ public class AlbumDisplayController implements Serializable {
 			if (result.get().equals("")) {
 				errorMessage();
 			}
-			//TODO: if album name already exists, send error message
-			//TODO: add album to list
 			else {
-				System.out.println("album name: " + result.get());
 				AlbumInfo albumInfo = new AlbumInfo((String)result.get(), 0, null, null);
+				//error message if album name already exists
+				for(int i=0; i<obsList.size(); i++) {
+					if(obsList.get(i).getName().toLowerCase().equals(albumInfo.getName().toLowerCase())) {
+						errorMessage();
+						return;
+					}
+				}
+				//adds album to list
 				obsList.add(albumInfo);	
+				albumList.getSelectionModel().select(albumInfo);
+				able();
 			}
 		}
 	}
@@ -123,7 +131,9 @@ public class AlbumDisplayController implements Serializable {
 	//text input dialogue pops up for user to enter new name of album
 	public void renameAlbumButton(ActionEvent event){
 		//TODO: get album name and display it in text box initially
-		TextInputDialog dialog = new TextInputDialog();
+		String currentName = albumList.getSelectionModel().getSelectedItem().getName();
+		
+		TextInputDialog dialog = new TextInputDialog(currentName);
 		dialog.setTitle("Rename Album");
 		dialog.setHeaderText("Rename Album");
 		dialog.setContentText("Enter new name for album:");
@@ -131,14 +141,24 @@ public class AlbumDisplayController implements Serializable {
 		
 		//if okay is clicked
 		if (result.isPresent()){
+			//if input is empty
 			if (result.get().equals("")) {
 				errorMessage();
 			}
-			//TODO: if album name already exists, send error message
-			//TODO: rename album in the list
-			else{
-				System.out.println("album name: " + result.get());
-			}
+			else {
+				//checks if it is duplicate name
+				for (int i =0; i<obsList.size(); i++) {
+					if (obsList.get(i).getName().toLowerCase().equals(result.get().toLowerCase())) {
+						errorMessage();
+						return;
+					}
+				}
+				albumInfo = albumList.getSelectionModel().getSelectedItem();
+				int index = albumList.getSelectionModel().getSelectedIndex();
+				albumInfo.setName(result.get());
+				obsList.set(index, albumInfo);
+				albumList.getSelectionModel().select(index);	
+			}		
 		}
 	}
 	
@@ -150,10 +170,12 @@ public class AlbumDisplayController implements Serializable {
 		
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
-		    //TODO: delete album of ok is clicked
-		} else {
-		    //TODO: if cancel button is clicked (I don't think we have to put anything here but not sure rn)
-		}
+			int index = albumList.getSelectionModel().getSelectedIndex(); 
+			obsList.remove(index);
+			if (obsList.isEmpty() && obsList != null) {
+				disable();
+			}
+		} 
 	}
 	
 
@@ -166,6 +188,22 @@ public class AlbumDisplayController implements Serializable {
 		alert.setHeaderText("Invalid Input");
 		alert.setContentText("Please try again.");
 		alert.showAndWait();
+	}
+	
+	//disable buttons when list is empty
+	public void disable() {
+		renameAlbumButton.setDisable(true);
+		deleteAlbumButton.setDisable(true);
+		deleteAlbumButton.setDisable(true);
+		openAlbumButton.setDisable(true);
+	}
+	
+	//able buttons when list is not empty anymore
+	public void able() {
+		renameAlbumButton.setDisable(false);
+		deleteAlbumButton.setDisable(false);
+		deleteAlbumButton.setDisable(false);
+		openAlbumButton.setDisable(false);
 	}
 
 	
