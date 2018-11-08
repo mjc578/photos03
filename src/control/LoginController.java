@@ -36,7 +36,8 @@ public class LoginController {
 	public void loginButton(ActionEvent event) throws Exception {
 		//go to album display scene 
 		//TODO: store username and user info somehow
-		Parent albumDisplayParent = FXMLLoader.load(getClass().getResource("/view/AlbumDisplay.fxml"));
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/AlbumDisplay.fxml"));
+		Parent albumDisplayParent = loader.load();
 		Scene albumDisplayScene = new Scene(albumDisplayParent,900,600);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
 		window.setScene(albumDisplayScene);

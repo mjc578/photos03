@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javafx.application.Application;
+import javafx.beans.InvalidationListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -25,7 +26,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import photos.AlbumInfo;
 
-public class AlbumDisplayController extends Application implements Serializable {
+public class AlbumDisplayController implements Serializable {
 
 	@FXML private Button openAlbumButton;
 	@FXML private Button newAlbumButton;
@@ -34,26 +35,21 @@ public class AlbumDisplayController extends Application implements Serializable 
 	@FXML private Button searchButton;
 	@FXML private Button logOutButton;
 	@FXML private TextField searchBar;
+	@FXML private ListView<AlbumInfo> albumList;
 	
-	
-	private AlbumInfo albumInfo;
-	@FXML ListView<AlbumInfo> listView;
-	private ObservableList<AlbumInfo> obsList;
+	private AlbumInfo albumInfo = new AlbumInfo(null, 0, null, null);
+	private ObservableList<AlbumInfo> obsList = FXCollections.observableArrayList(albumInfo);
+
 	
 	
 	
 	//first thing that happens when scene is loaded (must extend Application in class)
-	@Override
-	public void start(Stage arg0) {
-		
-		obsList = FXCollections.observableArrayList();
-		
-		
-		listView.setItems(obsList);
-	
+	public void initialize() {
+		albumList.setItems(obsList);
+
 	}
 		
-	
+
 	
 	
 	
