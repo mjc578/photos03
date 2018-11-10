@@ -1,6 +1,6 @@
 package control;
 
-import java.awt.TextArea;
+import javafx.scene.control.TextArea;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,16 +38,27 @@ public class EditController implements Serializable {
 	@FXML private Button previousPhotoButton;
 	@FXML private ListView<Tag> editTagListView;
 	
-	private List<String> tagTypes = new ArrayList<String>();
+	//all the stuff user can edit and may want to save
+	
+	//the text of the caption previously there
+	private String caption;
+	//the photo that was clicked on and is being edited
 	private Photo photoClicked = new Photo("deepel", "bobby");
-	private ObservableList<Tag> obsList = FXCollections.observableArrayList(photoClicked.getTags());
+	//probably gonna wanna load this and serialize
+	private List<String> tagTypes = new ArrayList<String>();
+	//the edit tag list
+	private ObservableList<Tag> obsList;
 	
 	public void initialize(){
 		// TODO Auto-generated method stub
-		System.out.println("poop");
 		tagTypes.add("Person");
 		tagTypes.add("Location");
-		System.out.println(photoClicked.getTags().size());
+		photoClicked.addTag(new Tag("Person", "Susan"));
+		photoClicked.addTag(new Tag("Person", "Sesh"));
+		photoClicked.addTag(new Tag("Location", "Bikini Bottom"));
+		obsList = FXCollections.observableArrayList(photoClicked.getTags());
+		//sets the edit caption text with the caption of the ohoto that was clicked
+		editCaption.setText(photoClicked.getCaption());
 		editTagListView.setItems(obsList);
 	}
 	
@@ -60,7 +71,7 @@ public class EditController implements Serializable {
 		
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
-		    //TODO: delete tag if ok is clicked
+		    obsList.remove(editTagListView.getSelectionModel().getSelectedItem());
 		} else {
 		    //TODO: if cancel button is clicked (I don't think we have to put anything here but not sure rn)
 		}
@@ -115,7 +126,7 @@ public class EditController implements Serializable {
 			if (result.get().equals("")) {
 				errorMessage();
 			}
-			//TODO: if tag already exists, send error message
+			//TODO: if tag type already exists, send error message
 			//TODO: add tag-type
 			else {
 				//adds tag type
@@ -127,8 +138,30 @@ public class EditController implements Serializable {
 	
 	//confirm button to confirm edited caption, tags, and tag-types
 	//TODO: implement button and go back to open album scene
-	public void confirmButton(ActionEvent event) {
-		System.out.println("pie");
+	public void confirmButton(ActionEvent event) throws IOException {
+		//gets rid  of of the photo of interests tag list and replaces it with the obs list one
+		photoClicked.getTags().clear();
+		for(Tag t : obsList) {
+			photoClicked.addTag(t);
+		}
+		
+		//TEMPORARY: prints out the tag list of photo licked, since we cant see it yet
+		for(Tag t : photoClicked.getTags()) {
+			System.out.println(t);
+		}
+		//replace the photo clicked caption with the one that may (or not) have been entered, doesn't really matter
+		
+		//TODO: this should get the set caption of the picture, not this temp picture's caption...
+		//ACTUALLY maybe not cause we are just gonna load that caption from the photo anyway if they cancel/confirm
+		caption = editCaption.getText();
+		photoClicked.setCaption(caption);
+					
+		Parent root = FXMLLoader.load(getClass().getResource("/view/OpenAlbum.fxml"));
+		Scene openAlbumScene = new Scene(root);
+		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
+		window.setScene(openAlbumScene);
+		window.setTitle("Photos");
+		window.show();
 	}
 	
 	//cancel button to cancel edited caption, tags, and tag-types

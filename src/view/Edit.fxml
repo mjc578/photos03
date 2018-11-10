@@ -69,7 +69,7 @@
             <Font size="14.0" />
          </font>
       </Label>
-      <TextArea layoutX="84.0" layoutY="76.0" prefHeight="108.0" prefWidth="342.0" wrapText="true" />
+      <TextArea fx:id="editCaption" layoutX="84.0" layoutY="76.0" prefHeight="108.0" prefWidth="342.0" wrapText="true" />
       <ListView fx:id="editTagListView" layoutX="84.0" layoutY="215.0" prefHeight="302.0" prefWidth="200.0" />
       <Button fx:id="addTagButton" layoutX="320.0" layoutY="270.0" mnemonicParsing="false" onAction="#addTagButton" prefHeight="35.0" prefWidth="95.0" text="Add Tag" />
       <Button fx:id="deleteTagButton" layoutX="320.0" layoutY="350.0" mnemonicParsing="false" onAction="#deleteTagButton" prefHeight="35.0" prefWidth="95.0" text="Delete Tag" />
