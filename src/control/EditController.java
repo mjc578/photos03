@@ -37,7 +37,6 @@ public class EditController implements Serializable {
 	@FXML private Button nextPhotoButton;
 	@FXML private Button previousPhotoButton;
 	@FXML private ListView<Tag> editTagListView;
-	@FXML private ListView<Tag> photoTagListView;
 	
 	private List<String> tagTypes = new ArrayList<String>();
 	private Photo photoClicked = new Photo("deepel", "bobby");
@@ -50,7 +49,6 @@ public class EditController implements Serializable {
 		tagTypes.add("Location");
 		System.out.println(photoClicked.getTags().size());
 		editTagListView.setItems(obsList);
-		photoTagListView.setItems(obsList);
 	}
 	
 	

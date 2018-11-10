@@ -4,7 +4,6 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Separator?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.image.ImageView?>
@@ -78,6 +77,6 @@
       <Label layoutX="469.0" layoutY="410.0" text="Caption:" />
       <Label fx:id="caption" alignment="TOP_LEFT" layoutX="540.0" layoutY="410.0" prefHeight="17.0" prefWidth="342.0" />
       <Label layoutX="469.0" layoutY="440.0" text="Tags:" />
-      <ListView layoutX="540.0" layoutY="440.0" prefHeight="82.0" prefWidth="342.0" />
+      <Label id="tagsLabel" alignment="TOP_LEFT" layoutX="528.0" layoutY="448.0" prefHeight="74.0" prefWidth="342.0" />
    </children>
 </AnchorPane>
