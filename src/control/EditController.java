@@ -38,6 +38,9 @@ public class EditController implements Serializable {
 	@FXML private Button previousPhotoButton;
 	@FXML private ListView<Tag> editTagListView;
 	
+	public static final String storeDir = "docs";
+	public static final String storeFile = "myTags.ser"; 
+	
 	//all the stuff user can edit and may want to save
 	
 	//the text of the caption previously there
@@ -45,14 +48,16 @@ public class EditController implements Serializable {
 	//the photo that was clicked on and is being edited
 	private Photo photoClicked = new Photo("deepel", "bobby");
 	//probably gonna wanna load this and serialize
-	private List<String> tagTypes = new ArrayList<String>();
+	private List<String> tagTypes;
 	//the edit tag list
 	private ObservableList<Tag> obsList;
 	
-	public void initialize(){
+	public void initialize() throws ClassNotFoundException, IOException{
 		// TODO Auto-generated method stub
-		tagTypes.add("Person");
-		tagTypes.add("Location");
+		tagTypes = readApp();
+		if(tagTypes == null) {
+			tagTypes = new ArrayList<String>();
+		}
 		photoClicked.addTag(new Tag("Person", "Susan"));
 		photoClicked.addTag(new Tag("Person", "Sesh"));
 		photoClicked.addTag(new Tag("Location", "Bikini Bottom"));
@@ -113,7 +118,7 @@ public class EditController implements Serializable {
 	}
 	
 	//add tag-type button
-	public void addTagTypeButton(ActionEvent event) {
+	public void addTagTypeButton(ActionEvent event) throws IOException {
 		TextInputDialog dialog = new TextInputDialog();
 		dialog.setTitle("New Tag-Type");
 		dialog.setHeaderText("New Tag-Type");
@@ -155,6 +160,8 @@ public class EditController implements Serializable {
 		//ACTUALLY maybe not cause we are just gonna load that caption from the photo anyway if they cancel/confirm
 		caption = editCaption.getText();
 		photoClicked.setCaption(caption);
+		
+		writeApp(tagTypes);
 					
 		Parent root = FXMLLoader.load(getClass().getResource("/view/OpenAlbum.fxml"));
 		Scene openAlbumScene = new Scene(root);
@@ -167,6 +174,8 @@ public class EditController implements Serializable {
 	//cancel button to cancel edited caption, tags, and tag-types
 	//go back to open album scene
 	public void cancelButton(ActionEvent event) throws Exception {
+		writeApp(tagTypes);
+		
 		Parent root = FXMLLoader.load(getClass().getResource("/view/OpenAlbum.fxml"));
 		Scene openAlbumScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
@@ -183,8 +192,23 @@ public class EditController implements Serializable {
 		alert.setContentText("Please try again.");
 		alert.showAndWait();
 	}
+	
+	public static void writeApp(List<String> tagApp) throws IOException {
+		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
+		oos.writeObject(tagApp);
+	} 
 
-
+	public static ArrayList<String> readApp() throws IOException, ClassNotFoundException {
+		
+		BufferedReader br = new BufferedReader(new FileReader("docs/myTags.ser"));     
+		if (br.readLine() == null) {
+		    return null;
+		}
+		ObjectInputStream ois = new ObjectInputStream(
+		new FileInputStream(storeDir + File.separator + storeFile));
+		ArrayList<String> tagType = (ArrayList<String>) ois.readObject();
+		return tagType;
+	} 
 
 	
 }
