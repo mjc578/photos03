@@ -9,6 +9,7 @@ public class Photo implements Serializable{
 	private List<Tag> tags;
 	private String caption;
 	private String date;
+	private String url;
 	
 	public Photo (String caption, String date) {
 		this.caption = caption;
@@ -34,5 +35,13 @@ public class Photo implements Serializable{
 	
 	public String getDate() {
 		return date;
+	}
+	
+	public String getURL() {
+		return url;
+	}
+	
+	public void setURL(String url) {
+		this.url = url;
 	}
 }

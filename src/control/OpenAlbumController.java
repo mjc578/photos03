@@ -1,5 +1,7 @@
 package control;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,8 +17,12 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.control.Alert.AlertType;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import photos.Photo;
 
 public class OpenAlbumController {
 	
@@ -31,10 +37,13 @@ public class OpenAlbumController {
 	@FXML private Label dataTime;
 	@FXML private Label caption;
 	@FXML private Label albumName;
+	@FXML private ImageView clickedImageView;
+	
+	FileChooser fileChooser;
 	
 	//first thing that happens when scene is loaded
 	public void initialize() {
-		
+		fileChooser = new FileChooser();
 	}
 	
 	//back button takes you back to Album Display scene
@@ -49,8 +58,14 @@ public class OpenAlbumController {
 	
 	//add photo button
 	//TODO: implement add button
-	public void addButton(ActionEvent event){
-		System.out.println("2");
+	public void addButton(ActionEvent event) throws MalformedURLException{
+		Photo p = new Photo(" ", " ");
+		fileChooser.setTitle("Open Resource File");
+		File file = fileChooser.showOpenDialog(null);
+		p.setURL(file.getAbsolutePath());
+		Image imageForFile = new Image("file:" + p.getURL());
+		System.out.println(p.getURL());
+		clickedImageView.setImage(imageForFile);
 	}
 	
 	//delete button - deletes selected photo

@@ -61,7 +61,7 @@
             </Button>
          </items>
       </ToolBar>
-      <ImageView fitHeight="302.0" fitWidth="416.0" layoutX="469.0" layoutY="13.0" pickOnBounds="true" />
+      <ImageView fx:id="clickedImageView" fitHeight="302.0" fitWidth="416.0" layoutX="469.0" layoutY="13.0" pickOnBounds="true" />
       <Button fx:id="previousPhotoButton" layoutX="597.0" layoutY="326.0" mnemonicParsing="false" onAction="#previousPhotoButton" prefHeight="39.0" prefWidth="68.0" text="&lt;">
          <font>
             <Font name="System Bold" size="18.0" />

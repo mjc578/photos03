@@ -107,10 +107,16 @@ public class EditController implements Serializable {
 				if (result2.get().equals("")) {
 					errorMessage();
 				}
-				//TODO: if tag already exists, send error message
-				//TODO: add tag to tag list
+				//adds tag to obsList unless it is a duplicate
 				else {
 					Tag t = new Tag(result.get(), result2.get());
+					
+					//duplicate tag
+					if(obsList.contains(t)) {
+						errorMessageDup();
+						return;
+					}
+					
 					obsList.add(t);
 				}
 			}
@@ -131,8 +137,10 @@ public class EditController implements Serializable {
 			if (result.get().equals("")) {
 				errorMessage();
 			}
-			//TODO: if tag type already exists, send error message
-			//TODO: add tag-type
+			//if tag type already exists, give an error
+			else if(tagTypes.contains(result.get())) {
+				errorMessageDup();
+			}
 			else {
 				//adds tag type
 				tagTypes.add(result.get());
@@ -142,7 +150,6 @@ public class EditController implements Serializable {
 	}
 	
 	//confirm button to confirm edited caption, tags, and tag-types
-	//TODO: implement button and go back to open album scene
 	public void confirmButton(ActionEvent event) throws IOException {
 		//gets rid  of of the photo of interests tag list and replaces it with the obs list one
 		photoClicked.getTags().clear();
@@ -193,6 +200,15 @@ public class EditController implements Serializable {
 		alert.showAndWait();
 	}
 	
+	//error alert for invalid inputs
+	public void errorMessageDup() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("Duplicate Input");
+		alert.setContentText("Please try again.");
+		alert.showAndWait();
+	}
+	
 	public static void writeApp(List<String> tagApp) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
 		oos.writeObject(tagApp);
@@ -202,11 +218,14 @@ public class EditController implements Serializable {
 		
 		BufferedReader br = new BufferedReader(new FileReader("docs/myTags.ser"));     
 		if (br.readLine() == null) {
+			br.close();
 		    return null;
 		}
 		ObjectInputStream ois = new ObjectInputStream(
 		new FileInputStream(storeDir + File.separator + storeFile));
 		ArrayList<String> tagType = (ArrayList<String>) ois.readObject();
+		br.close();
+		ois.close();
 		return tagType;
 	} 
 

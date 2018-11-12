@@ -22,5 +22,15 @@ public class Tag {
 	public String toString() {
 		return tagType + ": " + tagValue;
 	}
+	
+	public boolean equals(Object o) {
+		
+		if(o == null || !(o instanceof Tag)) {
+			return false;
+		}
+		
+		Tag t = (Tag) o;
+		return t.tagType.equals(tagType) && t.tagValue.equals(tagValue);
+	}
 
 }
