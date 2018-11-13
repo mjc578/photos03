@@ -23,8 +23,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
-import photos.Photo;
-import photos.Tag;
+import model.Photo;
+import model.Tag;
 
 public class EditController implements Serializable {
 
