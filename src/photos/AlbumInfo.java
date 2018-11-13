@@ -1,6 +1,8 @@
 package photos;
 
-public class AlbumInfo{
+import java.io.Serializable;
+
+public class AlbumInfo implements Serializable{
 	
 	private String name;
 	private int numPhotos;

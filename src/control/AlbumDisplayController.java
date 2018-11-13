@@ -1,5 +1,13 @@
 package control;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,15 +45,31 @@ public class AlbumDisplayController implements Serializable {
 	@FXML private ListView<AlbumInfo> albumList;
 	
 	private AlbumInfo albumInfo;
+	private List<AlbumInfo> albums;
 	private ObservableList<AlbumInfo> obsList;
 	
+	public static final String storeDir = "docs";
+	public static final String storeFile = "albums.ser"; 
+	
 	//first thing that happens when scene is loaded (must extend Application in class)
-	public void initialize() {
-		obsList = FXCollections.observableArrayList();
-		albumList.setItems(obsList);
+	public void initialize() throws ClassNotFoundException, IOException {
 		
-		albumInfo = new AlbumInfo("Stock", 5, null, null);
-		obsList.add(albumInfo);
+		albums = readApp();
+		
+		if(albums == null) {
+			albums = new ArrayList<AlbumInfo>();
+			obsList = FXCollections.observableArrayList(albums);
+			albumList.setItems(obsList);
+			//set stock photos first time scene is loaded
+			albumInfo = new AlbumInfo("Stock", 5, null, null);
+			obsList.add(albumInfo);
+			albums.add(albumInfo);
+		}
+		//executes if this is not the first time loading scene so that Stock album is not created again
+		else {
+			obsList = FXCollections.observableArrayList(albums);
+			albumList.setItems(obsList);
+		}
 
 		if (obsList.isEmpty() && obsList != null) {
 			disable();
@@ -57,6 +81,7 @@ public class AlbumDisplayController implements Serializable {
 
 	//log out button takes you back to login scene
 	public void logOutButton(ActionEvent event) throws Exception {
+		writeApp(albums);
 		Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
 		Scene albumDisplayScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
@@ -68,6 +93,7 @@ public class AlbumDisplayController implements Serializable {
 	//open album button
 	//open album button to go to open album scene
 	public void openAlbumButton(ActionEvent event) throws Exception{
+		writeApp(albums);
 		Parent root = FXMLLoader.load(getClass().getResource("/view/OpenAlbum.fxml"));
 		Scene openAlbumScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
@@ -121,8 +147,10 @@ public class AlbumDisplayController implements Serializable {
 				}
 				//adds album to list
 				obsList.add(albumInfo);	
+				albums.add(albumInfo);
 				albumList.getSelectionModel().select(albumInfo);
 				able();
+				System.out.println(albums);
 			}
 		}
 	}
@@ -157,7 +185,9 @@ public class AlbumDisplayController implements Serializable {
 				int index = albumList.getSelectionModel().getSelectedIndex();
 				albumInfo.setName(result.get());
 				obsList.set(index, albumInfo);
-				albumList.getSelectionModel().select(index);	
+				albums.set(index, albumInfo);
+				albumList.getSelectionModel().select(index);
+				System.out.println(albums);
 			}		
 		}
 	}
@@ -172,6 +202,7 @@ public class AlbumDisplayController implements Serializable {
 		if (result.get() == ButtonType.OK){
 			int index = albumList.getSelectionModel().getSelectedIndex(); 
 			obsList.remove(index);
+			albums.remove(index);
 			if (obsList.isEmpty() && obsList != null) {
 				disable();
 			}
@@ -205,6 +236,26 @@ public class AlbumDisplayController implements Serializable {
 		deleteAlbumButton.setDisable(false);
 		openAlbumButton.setDisable(false);
 	}
+	
+	public static void writeApp(List<AlbumInfo> albums) throws IOException {
+		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
+		oos.writeObject(albums);
+	} 
+	
+	public static ArrayList<AlbumInfo> readApp() throws IOException, ClassNotFoundException {
+		
+		BufferedReader br = new BufferedReader(new FileReader("docs/albums.ser"));     
+		if (br.readLine() == null) {
+			br.close();
+		    return null;
+		}
+		ObjectInputStream ois = new ObjectInputStream(
+		new FileInputStream(storeDir + File.separator + storeFile));
+		ArrayList<AlbumInfo> albums = (ArrayList<AlbumInfo>) ois.readObject();
+		br.close();
+		ois.close();
+		return albums;
+	} 
 
 	
 }
