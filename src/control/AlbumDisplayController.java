@@ -83,9 +83,9 @@ public class AlbumDisplayController implements Serializable {
 	public void logOutButton(ActionEvent event) throws Exception {
 		writeApp(albums);
 		Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
-		Scene albumDisplayScene = new Scene(root);
+		Scene loginScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
-		window.setScene(albumDisplayScene);
+		window.setScene(loginScene);
 		window.setTitle("Photos Login");
 		window.show();
 	}

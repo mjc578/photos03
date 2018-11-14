@@ -20,4 +20,10 @@ public class User {
 	public void addToAlbums(AlbumInfo album) {
 		userAlbums.add(album);
 	}
+	
+	@Override
+	public String toString() {
+		return this.getUsername();
+	}
+	
 }
