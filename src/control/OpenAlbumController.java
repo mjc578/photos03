@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,12 +19,18 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.GridPane;
+import javafx.scene.paint.Color;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import model.Photo;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 
 public class OpenAlbumController {
 	
@@ -38,12 +46,56 @@ public class OpenAlbumController {
 	@FXML private Label caption;
 	@FXML private Label albumName;
 	@FXML private ImageView clickedImageView;
+	@FXML private ListView<String> listView;
+	private ObservableList<String> obsList;
 	
 	FileChooser fileChooser;
+	
+	private final Image stock1  = new Image("stockPhotos/cactus.jpg");
+    private final Image stock2  = new Image("stockPhotos/noose book.jpg");
+    private final Image stock3  = new Image("stockPhotos/noose hourglass.jpg");
+    private final Image stock4 = new Image("stockPhotos/noose part 2.jpg");
+    private final Image stock5 = new Image("stockPhotos/utensils.jpg");
+
+    private Image[] listOfImages = {stock1, stock2, stock3, stock4, stock5};
+
 	
 	//first thing that happens when scene is loaded
 	public void initialize() {
 		fileChooser = new FileChooser();
+		
+        obsList =FXCollections.observableArrayList (
+                "stock1", "stock2", "stock3", "stock4", "stock5");
+        listView.setItems(obsList);
+       
+       
+        listView.setCellFactory(param -> new ListCell<String>() {
+            @Override
+            public void updateItem(String name, boolean empty) {
+                super.updateItem(name, empty);
+                ImageView imageView = new ImageView();
+                imageView.setFitWidth(50);
+                imageView.setFitHeight(50);
+                if (empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                    if(name.equals("stock1"))
+                        imageView.setImage(listOfImages[0]);
+                    else if(name.equals("stock2"))
+                        imageView.setImage(listOfImages[1]);
+                    else if(name.equals("stock3"))
+                        imageView.setImage(listOfImages[2]);
+                    else if(name.equals("stock4"))
+                        imageView.setImage(listOfImages[3]);
+                    else if(name.equals("stock5"))
+                        imageView.setImage(listOfImages[4]);
+                    setText(name);
+                    setGraphic(imageView);
+                }
+            }
+        });
+        
 	}
 	
 	//back button takes you back to Album Display scene
@@ -131,7 +183,7 @@ public class OpenAlbumController {
 	// "<" button
 	//TODO: implement button
 	public void previousPhotoButton(ActionEvent event){
-		System.out.println("6");
+		System.out.println("6");	
 	}
 	
 	// ">" button
