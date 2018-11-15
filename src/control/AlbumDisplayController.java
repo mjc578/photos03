@@ -94,7 +94,13 @@ public class AlbumDisplayController implements Serializable {
 	//open album button to go to open album scene
 	public void openAlbumButton(ActionEvent event) throws Exception{
 		writeApp(albums);
-		Parent root = FXMLLoader.load(getClass().getResource("/view/OpenAlbum.fxml"));
+		
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/view/OpenAlbum.fxml"));
+		Parent root = loader.load();
+		OpenAlbumController controller = loader.getController();
+		controller.initData(albumList.getSelectionModel().getSelectedItem());
+		
 		Scene openAlbumScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
 		window.setScene(openAlbumScene);

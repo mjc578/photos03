@@ -28,6 +28,7 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.util.Callback;
+import model.AlbumInfo;
 import model.Photo;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
@@ -56,9 +57,14 @@ public class OpenAlbumController {
     private final Image stock3  = new Image("stockPhotos/noose hourglass.jpg");
     private final Image stock4 = new Image("stockPhotos/noose part 2.jpg");
     private final Image stock5 = new Image("stockPhotos/utensils.jpg");
-
     private Image[] listOfImages = {stock1, stock2, stock3, stock4, stock5};
-
+    
+    private AlbumInfo selectedAlbum;
+  //gets selected album
+  	public void initData(AlbumInfo album) {
+  		selectedAlbum = album;
+  		System.out.println(selectedAlbum.getName());
+  	}
 	
 	//first thing that happens when scene is loaded
 	public void initialize() {
@@ -95,6 +101,8 @@ public class OpenAlbumController {
                 }
             }
         });
+        
+        
         
 	}
 	
