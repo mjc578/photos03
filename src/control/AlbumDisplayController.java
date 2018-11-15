@@ -49,12 +49,15 @@ public class AlbumDisplayController implements Serializable {
 	private List<AlbumInfo> albums;
 	private ObservableList<AlbumInfo> obsList;
 	
-	private User selectedUser;
+	private List<User> users;
+	private int userIndex;
 	
-	//gets User from loginController
-	public void initData(User user) {
-		selectedUser = user;	
-		System.out.print(selectedUser);
+	//gets selected user from loginController
+	public void initData(List<User> user, int index) {
+		users = user;
+		userIndex = index;
+		System.out.println(users);
+		System.out.println(userIndex);
 	}
 	
 	//first thing that happens when scene is loaded (must extend Application in class)
@@ -105,7 +108,7 @@ public class AlbumDisplayController implements Serializable {
 		loader.setLocation(getClass().getResource("/view/OpenAlbum.fxml"));
 		Parent root = loader.load();
 		OpenAlbumController controller = loader.getController();
-		controller.initData(albumList.getSelectionModel().getSelectedItem());
+		controller.initData(users, userIndex, albums, albumList.getSelectionModel().getSelectedIndex());
 		
 		Scene openAlbumScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	

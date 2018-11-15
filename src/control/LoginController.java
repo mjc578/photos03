@@ -45,6 +45,9 @@ public class LoginController implements Serializable{
 		if (users==null) {
 			users = new ArrayList<User>();
 			obsList = FXCollections.observableArrayList(users);
+			User stock = new User("stock");
+			obsList.add(stock);
+			users.add(stock);
 		}
 		else {
 			obsList = FXCollections.observableArrayList(users);
@@ -94,7 +97,7 @@ public class LoginController implements Serializable{
 					loader.setLocation((getClass().getResource("/view/AlbumDisplay.fxml")));
 					Parent albumDisplayParent = loader.load();
 					AlbumDisplayController controller = loader.getController();
-					controller.initData(users.get(i));
+					controller.initData(users,i);
 					
 					Scene albumDisplayScene = new Scene(albumDisplayParent,900,600);
 					Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	

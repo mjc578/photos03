@@ -30,6 +30,7 @@ import javafx.stage.Stage;
 import javafx.util.Callback;
 import model.AlbumInfo;
 import model.Photo;
+import model.User;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 
@@ -59,11 +60,22 @@ public class OpenAlbumController {
     private final Image stock5 = new Image("stockPhotos/utensils.jpg");
     private Image[] listOfImages = {stock1, stock2, stock3, stock4, stock5};
     
-    private AlbumInfo selectedAlbum;
-  //gets selected album
-  	public void initData(AlbumInfo album) {
-  		selectedAlbum = album;
-  		System.out.println(selectedAlbum.getName());
+    
+    private List<User> users;
+    private List<AlbumInfo> albums;
+    private int albumIndex;
+    private int userIndex;
+    
+  //gets selected album and user from albumDisplayController
+  	public void initData(List<User> user, int index, List<AlbumInfo> album, int index2) {
+  		users = user;
+  		albums = album;
+  		userIndex = index;
+  		albumIndex = index2;
+  		System.out.println(users);
+  		System.out.println(albums);
+  		System.out.println(userIndex);
+  		System.out.println(albumIndex);
   	}
 	
 	//first thing that happens when scene is loaded
@@ -102,13 +114,19 @@ public class OpenAlbumController {
             }
         });
         
+        listView.getSelectionModel().select(0);     
         
         
 	}
 	
 	//back button takes you back to Album Display scene
 	public void backButton(ActionEvent event) throws Exception{
-		Parent root = FXMLLoader.load(getClass().getResource("/view/AlbumDisplay.fxml"));
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/view/AlbumDisplay.fxml"));
+		Parent root = loader.load();
+		AlbumDisplayController controller = loader.getController();
+		controller.initData(users, userIndex);
+		
 		Scene albumDisplayScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
 		window.setScene(albumDisplayScene);
@@ -203,8 +221,13 @@ public class OpenAlbumController {
 	// edit button - takes you to edit scene
 	// edit scene allows you to edit caption, add tags, add tag-types, and delete tags
 	public void editButton(ActionEvent event) throws Exception{
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/Edit.fxml"));
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/view/Edit.fxml"));
 		Parent root = loader.load();
+		EditController controller = loader.getController();
+		controller.initData(users, userIndex, albums, albumIndex);
+		
+		
 		Scene EditScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
 		window.setScene(EditScene);

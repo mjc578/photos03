@@ -23,8 +23,10 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
+import model.AlbumInfo;
 import model.Photo;
 import model.Tag;
+import model.User;
 
 public class EditController implements Serializable {
 
@@ -51,6 +53,23 @@ public class EditController implements Serializable {
 	private List<String> tagTypes;
 	//the edit tag list
 	private ObservableList<Tag> obsList;
+	
+	private List<User> users;
+	private int userIndex;
+	private List<AlbumInfo> albums;
+	private int albumIndex;
+	
+	
+	public void initData(List<User> user, int index, List<AlbumInfo> album, int index2) {
+		users = user;
+		albums = album;
+		userIndex = index;
+		albumIndex = index2;
+		System.out.println(users);
+  		System.out.println(albums);
+  		System.out.println(userIndex);
+  		System.out.println(albumIndex);
+	} 
 	
 	public void initialize() throws ClassNotFoundException, IOException{
 		// TODO Auto-generated method stub
@@ -170,7 +189,12 @@ public class EditController implements Serializable {
 		
 		writeApp(tagTypes);
 					
-		Parent root = FXMLLoader.load(getClass().getResource("/view/OpenAlbum.fxml"));
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/view/OpenAlbum.fxml"));
+		Parent root = loader.load();
+		OpenAlbumController controller = loader.getController();
+		controller.initData(users, userIndex, albums, albumIndex);
+		
 		Scene openAlbumScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
 		window.setScene(openAlbumScene);
@@ -181,9 +205,12 @@ public class EditController implements Serializable {
 	//cancel button to cancel edited caption, tags, and tag-types
 	//go back to open album scene
 	public void cancelButton(ActionEvent event) throws Exception {
-		writeApp(tagTypes);
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/view/OpenAlbum.fxml"));
+		Parent root = loader.load();
+		OpenAlbumController controller = loader.getController();
+		controller.initData(users, userIndex, albums, albumIndex);
 		
-		Parent root = FXMLLoader.load(getClass().getResource("/view/OpenAlbum.fxml"));
 		Scene openAlbumScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
 		window.setScene(openAlbumScene);
@@ -227,7 +254,9 @@ public class EditController implements Serializable {
 		br.close();
 		ois.close();
 		return tagType;
-	} 
+	}
+
+
 
 	
 }
