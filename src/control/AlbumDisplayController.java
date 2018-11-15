@@ -32,6 +32,7 @@ import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import model.AlbumInfo;
+import model.User;
 
 public class AlbumDisplayController implements Serializable {
 
@@ -48,8 +49,13 @@ public class AlbumDisplayController implements Serializable {
 	private List<AlbumInfo> albums;
 	private ObservableList<AlbumInfo> obsList;
 	
-	public static final String storeDir = "docs";
-	public static final String storeFile = "albums.ser"; 
+	private User selectedUser;
+	
+	//gets User from loginController
+	public void initData(User user) {
+		selectedUser = user;	
+		System.out.print(selectedUser);
+	}
 	
 	//first thing that happens when scene is loaded (must extend Application in class)
 	public void initialize() throws ClassNotFoundException, IOException {
@@ -243,6 +249,9 @@ public class AlbumDisplayController implements Serializable {
 		openAlbumButton.setDisable(false);
 	}
 	
+	public static final String storeDir = "docs";
+	public static final String storeFile = "albums.ser"; 
+	
 	public static void writeApp(List<AlbumInfo> albums) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
 		oos.writeObject(albums);
@@ -261,7 +270,5 @@ public class AlbumDisplayController implements Serializable {
 		br.close();
 		ois.close();
 		return albums;
-	} 
-
-	
+	}
 }

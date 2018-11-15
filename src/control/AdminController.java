@@ -33,19 +33,29 @@ public class AdminController implements Serializable {
 	@FXML private Button deleteButton;
 	@FXML private ListView<User> usersList;
 	private ObservableList<User> obsList;
+	private List<User> users;
 	
-	public void initialize(){
-
-		obsList = FXCollections.observableArrayList();
+	//gets list of users from loginController
+	public void initData(List<User> user) {
+		users = user;
+		obsList = FXCollections.observableArrayList(users);
 		usersList.setItems(obsList);
 		
 		if (obsList.isEmpty() && obsList != null) {
 			deleteButton.setDisable(true);
 		}
+		System.out.println(users);
+		
+		usersList.getSelectionModel().select(0);
 	}
 	
+	//goes back to login screen
 	public void logOutButton(ActionEvent event) throws Exception {
-		Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
+		writeApp(users);
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/view/Login.fxml"));
+		Parent root = loader.load();
+		LoginController controller = loader.getController();
 		Scene loginScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
 		window.setScene(loginScene);
@@ -53,6 +63,7 @@ public class AdminController implements Serializable {
 		window.show();
 	}
 	
+	//create new users
 	public void addButton(ActionEvent event){
 		TextInputDialog dialog = new TextInputDialog();
 		dialog.setTitle("New User");
@@ -77,6 +88,7 @@ public class AdminController implements Serializable {
 				}
 				//adds user to list
 				obsList.add(user);	
+				users.add(user);
 				usersList.getSelectionModel().select(user);
 				deleteButton.setDisable(false);
 			}
@@ -92,6 +104,7 @@ public class AdminController implements Serializable {
 		if (result.get() == ButtonType.OK){
 			int index = usersList.getSelectionModel().getSelectedIndex(); 
 			obsList.remove(index);
+			users.remove(index);
 			if (obsList.isEmpty() && obsList != null) {
 				deleteButton.setDisable(true);
 			}
@@ -107,11 +120,10 @@ public class AdminController implements Serializable {
 	}
 	
 	public static final String storeDir = "docs";
-	public static final String storeFile = "users.ser";
+	public static final String storeFile = "users.ser"; 
 	
 	public static void writeApp(List<User> users) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
 		oos.writeObject(users);
 	} 
-
 }
