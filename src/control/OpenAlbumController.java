@@ -75,7 +75,7 @@ public class OpenAlbumController {
 	public void initialize() {
 		fileChooser = new FileChooser();
 		
-		ArrayList arrayList = new ArrayList();
+		ArrayList<Photo> arrayList = new ArrayList<Photo>();
 		
 		Photo photo = new Photo("caption wow", "Nov. 15, 2018", "stockPhotos/cactus.jpg" );
 		Photo photo2 = new Photo("pooooop", "Feb. 15, 1667", "stockPhotos/utensils.jpg" );
@@ -114,10 +114,10 @@ public class OpenAlbumController {
         if (obsList != null && !obsList.isEmpty()) {
 			showPhotoDetails();
 		}
-        
+	        
         //listener
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
-        	if(newVal!=null) {
+        	if(newVal != null) {
         		showPhotoDetails();
         	}
         });

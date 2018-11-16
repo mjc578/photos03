@@ -56,23 +56,27 @@ public class AlbumDisplayController implements Serializable {
 	public void initData(List<User> user, int index) {
 		users = user;
 		userIndex = index;
+		albums = users.get(userIndex).getUserAlbums();
 		System.out.println(users);
 		System.out.println(userIndex);
 	}
 	
 	//first thing that happens when scene is loaded (must extend Application in class)
 	public void initialize() throws ClassNotFoundException, IOException {
-		
-		albums = readApp();
-		
+				
 		if(albums == null) {
 			albums = new ArrayList<AlbumInfo>();
 			obsList = FXCollections.observableArrayList(albums);
 			albumList.setItems(obsList);
 			//set stock photos first time scene is loaded
+			
+			
+			/** this is only for stock user this is adding it for every user
 			albumInfo = new AlbumInfo("Stock", 5, null, null);
 			obsList.add(albumInfo);
 			albums.add(albumInfo);
+			
+			**/
 		}
 		//executes if this is not the first time loading scene so that Stock album is not created again
 		else {
@@ -224,9 +228,6 @@ public class AlbumDisplayController implements Serializable {
 		} 
 	}
 	
-
-	
-	
 	//error alert for invalid inputs
 	public void errorMessage() {
 		Alert alert = new Alert(AlertType.ERROR);
@@ -259,19 +260,4 @@ public class AlbumDisplayController implements Serializable {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
 		oos.writeObject(albums);
 	} 
-	
-	public static ArrayList<AlbumInfo> readApp() throws IOException, ClassNotFoundException {
-		
-		BufferedReader br = new BufferedReader(new FileReader("docs/albums.ser"));     
-		if (br.readLine() == null) {
-			br.close();
-		    return null;
-		}
-		ObjectInputStream ois = new ObjectInputStream(
-		new FileInputStream(storeDir + File.separator + storeFile));
-		ArrayList<AlbumInfo> albums = (ArrayList<AlbumInfo>) ois.readObject();
-		br.close();
-		ois.close();
-		return albums;
-	}
 }

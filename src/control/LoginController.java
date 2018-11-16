@@ -90,19 +90,19 @@ public class LoginController implements Serializable{
 				errorMessage();
 			}
 			//searches user list to see if user exists
-			for (int i=0; i<users.size(); i++) {
+			for (int i = 0; i < users.size(); i++) {
 				//if user exists, go to album display
 				if (username.getText().equals(users.get(i).getUsername())) {
 					FXMLLoader loader = new FXMLLoader();
 					loader.setLocation((getClass().getResource("/view/AlbumDisplay.fxml")));
 					Parent albumDisplayParent = loader.load();
 					AlbumDisplayController controller = loader.getController();
-					controller.initData(users,i);
+					controller.initData(users, i);
 					
 					Scene albumDisplayScene = new Scene(albumDisplayParent,900,600);
 					Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
 					window.setScene(albumDisplayScene);
-					window.setTitle("Album Display");
+					window.setTitle(users.get(i) + " Album Display");
 					window.show();
 					return;
 				}
