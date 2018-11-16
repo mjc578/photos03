@@ -48,7 +48,7 @@ public class EditController implements Serializable {
 	//the text of the caption previously there
 	private String caption;
 	//the photo that was clicked on and is being edited
-	private Photo photoClicked = new Photo("deepel", "bobby");
+	private Photo photoClicked = new Photo("deepel", "bobby", " ");
 	//probably gonna wanna load this and serialize
 	private List<String> tagTypes;
 	//the edit tag list

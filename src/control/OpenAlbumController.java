@@ -44,22 +44,24 @@ public class OpenAlbumController {
 	@FXML private Button backButton;
 	@FXML private Button previousPhotoButton;
 	@FXML private Button nextPhotoButton;
-	@FXML private Label dataTime;
+	@FXML private Label dateTime;
 	@FXML private Label caption;
 	@FXML private Label albumName;
 	@FXML private ImageView clickedImageView;
-	@FXML private ListView<String> listView;
-	private ObservableList<String> obsList;
+	@FXML private ListView<Photo> listView;
+	private ObservableList<Photo> obsList;
+	private ArrayList<Photo> arrayList;
+	
 	
 	FileChooser fileChooser;
-	
+	/*
 	private final Image stock1  = new Image("stockPhotos/cactus.jpg");
     private final Image stock2  = new Image("stockPhotos/noose book.jpg");
     private final Image stock3  = new Image("stockPhotos/noose hourglass.jpg");
     private final Image stock4 = new Image("stockPhotos/noose part 2.jpg");
     private final Image stock5 = new Image("stockPhotos/utensils.jpg");
     private Image[] listOfImages = {stock1, stock2, stock3, stock4, stock5};
-    
+    */
     
     private List<User> users;
     private List<AlbumInfo> albums;
@@ -82,6 +84,15 @@ public class OpenAlbumController {
 	public void initialize() {
 		fileChooser = new FileChooser();
 		
+		ArrayList arrayList = new ArrayList();
+		obsList = FXCollections.observableArrayList(arrayList);
+		listView.setItems(obsList);
+		
+		Photo photo = new Photo("caption wow", "Nov. 15, 2018", "stockPhotos/cactus.jpg" );
+		Photo photo2 = new Photo("pooooop", "Feb. 15, 1667", "stockPhotos/utensils.jpg" );
+		obsList.add(photo);
+		obsList.add(photo2);
+		/*
         obsList =FXCollections.observableArrayList (
                 "stock1", "stock2", "stock3", "stock4", "stock5");
         listView.setItems(obsList);
@@ -113,10 +124,18 @@ public class OpenAlbumController {
                 }
             }
         });
+        */
+        listView.getSelectionModel().select(0);    
+        if (obsList != null && !obsList.isEmpty()) {
+			showPhotoDetails();
+		}
         
-        listView.getSelectionModel().select(0);     
-        
-        
+        //listener
+        listView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+        	if(newVal!=null) {
+        		showPhotoDetails();
+        	}
+        });
 	}
 	
 	//back button takes you back to Album Display scene
@@ -137,7 +156,7 @@ public class OpenAlbumController {
 	//add photo button
 	//TODO: implement add button
 	public void addButton(ActionEvent event) throws MalformedURLException{
-		Photo p = new Photo(" ", " ");
+		Photo p = new Photo(" ", " ", " ");
 		fileChooser.setTitle("Open Resource File");
 		File file = fileChooser.showOpenDialog(null);
 		p.setURL(file.getAbsolutePath());
@@ -234,4 +253,10 @@ public class OpenAlbumController {
 		window.setTitle("Edit");
 		window.show();
 	}
+	
+	public void showPhotoDetails(){
+		dateTime.setText(listView.getSelectionModel().getSelectedItem().getDate());
+		caption.setText(listView.getSelectionModel().getSelectedItem().getCaption());
+	}
+	
 }

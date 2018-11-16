@@ -11,9 +11,10 @@ public class Photo implements Serializable{
 	private String date;
 	private String url;
 	
-	public Photo (String caption, String date) {
+	public Photo (String caption, String date, String url) {
 		this.caption = caption;
 		this.date = date;
+		this.url = url;
 		tags = new ArrayList<Tag>();
 	}
 	
@@ -43,5 +44,9 @@ public class Photo implements Serializable{
 	
 	public void setURL(String url) {
 		this.url = url;
+	}
+	
+	public String toString() {
+		return url + " - " + caption;	
 	}
 }
