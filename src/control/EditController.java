@@ -56,7 +56,6 @@ public class EditController implements Serializable {
 	
 	private List<User> users;
 	private int userIndex;
-	private List<AlbumInfo> albums;
 	private int albumIndex;
 	private int photoIndex;
 	
@@ -70,10 +69,7 @@ public class EditController implements Serializable {
 	
 	public void initialize() throws ClassNotFoundException, IOException{
 		// TODO Auto-generated method stub
-		tagTypes = readApp();
-		if(tagTypes == null) {
-			tagTypes = new ArrayList<String>();
-		}
+		
 		photoClicked.addTag(new Tag("Person", "Susan"));
 		photoClicked.addTag(new Tag("Person", "Sesh"));
 		photoClicked.addTag(new Tag("Location", "Bikini Bottom"));
@@ -237,23 +233,4 @@ public class EditController implements Serializable {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
 		oos.writeObject(tagApp);
 	} 
-
-	public static ArrayList<String> readApp() throws IOException, ClassNotFoundException {
-		
-		BufferedReader br = new BufferedReader(new FileReader("docs/myTags.ser"));     
-		if (br.readLine() == null) {
-			br.close();
-		    return null;
-		}
-		ObjectInputStream ois = new ObjectInputStream(
-		new FileInputStream(storeDir + File.separator + storeFile));
-		ArrayList<String> tagType = (ArrayList<String>) ois.readObject();
-		br.close();
-		ois.close();
-		return tagType;
-	}
-
-
-
-	
 }

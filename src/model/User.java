@@ -7,10 +7,14 @@ public class User implements Serializable{
 	
 	private String username;
 	private ArrayList<AlbumInfo> userAlbums;
+	private ArrayList<String> tagTypes;
 	
 	public User(String username) {
 		this.username = username;
 		userAlbums = new ArrayList<AlbumInfo>();
+		tagTypes = new ArrayList<String>();
+		tagTypes.add("person");
+		tagTypes.add("Location");
 	}
 	
 	public String getUsername() {

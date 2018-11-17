@@ -1,6 +1,7 @@
 package model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class AlbumInfo implements Serializable{
 	
@@ -8,12 +9,14 @@ public class AlbumInfo implements Serializable{
 	private int numPhotos;
 	private String startDateRange;
 	private String endDateRange;
+	private ArrayList<Photo> photos;
 	
 	public AlbumInfo(String name, int numPhotos, String startDateRange, String endDateRange) {
 		this.name = name;
 		this.numPhotos = numPhotos;
 		this.startDateRange = startDateRange;
 		this.endDateRange = endDateRange;
+		photos = new ArrayList<Photo>();
 	}
 
 	public String getName() {
@@ -39,6 +42,14 @@ public class AlbumInfo implements Serializable{
 	}
 	public void setEndDateRange(String endDateRange) {
 		this.endDateRange = endDateRange;
+	}
+	
+	public void addPhoto(Photo p) {
+		photos.add(p);
+	}
+	
+	public void deletePhoto(int index) {
+		photos.remove(index);
 	}
 	
 	@Override

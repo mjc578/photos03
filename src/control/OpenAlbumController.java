@@ -56,23 +56,27 @@ public class OpenAlbumController {
 	FileChooser fileChooser;
     
     private List<User> users;
-    private List<AlbumInfo> albums;
     private int albumIndex;
     private int userIndex;
     
   //gets selected album and user from albumDisplayController
   	public void initData(List<User> user, int index, int index2) {
+  		//sets the users list, the index of user we need, and the index of album we need
   		users = user;
   		userIndex = index;
   		albumIndex = index2;
 
+  		//initialize the file chooser
+  		fileChooser = new FileChooser();
+  		
+  		//set the obslist on the users list of photos in the album user clicked on
+  		
+  		
   	}
 	
 	//first thing that happens when scene is loaded
 	public void initialize() {
-		fileChooser = new FileChooser();
 		
-		arrayList = new ArrayList<Photo>();
 		
 		obsList = FXCollections.observableArrayList(arrayList);
 		listView.setItems(obsList);
