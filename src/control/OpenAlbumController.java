@@ -61,15 +61,11 @@ public class OpenAlbumController {
     private int userIndex;
     
   //gets selected album and user from albumDisplayController
-  	public void initData(List<User> user, int index, List<AlbumInfo> album, int index2) {
+  	public void initData(List<User> user, int index, int index2) {
   		users = user;
-  		albums = album;
   		userIndex = index;
   		albumIndex = index2;
-  		System.out.println(users);
-  		System.out.println(albums);
-  		System.out.println(userIndex);
-  		System.out.println(albumIndex);
+
   	}
 	
 	//first thing that happens when scene is loaded
@@ -252,7 +248,9 @@ public class OpenAlbumController {
 		loader.setLocation(getClass().getResource("/view/Edit.fxml"));
 		Parent root = loader.load();
 		EditController controller = loader.getController();
-		controller.initData(users, userIndex, albums, albumIndex);
+		int photoIndex = listView.getSelectionModel().getSelectedIndex();
+		
+		controller.initData(users, userIndex, albumIndex, photoIndex);
 		
 		Scene EditScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	

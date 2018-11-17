@@ -92,7 +92,7 @@ public class AlbumDisplayController implements Serializable {
 		loader.setLocation(getClass().getResource("/view/OpenAlbum.fxml"));
 		Parent root = loader.load();
 		OpenAlbumController controller = loader.getController();
-		controller.initData(users, userIndex, albums, albumList.getSelectionModel().getSelectedIndex());
+		controller.initData(users, userIndex, albumList.getSelectionModel().getSelectedIndex());
 		
 		Scene openAlbumScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	

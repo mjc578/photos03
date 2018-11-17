@@ -58,17 +58,14 @@ public class EditController implements Serializable {
 	private int userIndex;
 	private List<AlbumInfo> albums;
 	private int albumIndex;
+	private int photoIndex;
 	
 	
-	public void initData(List<User> user, int index, List<AlbumInfo> album, int index2) {
+	public void initData(List<User> user, int index, int index2, int index3) {
 		users = user;
-		albums = album;
 		userIndex = index;
 		albumIndex = index2;
-		System.out.println(users);
-  		System.out.println(albums);
-  		System.out.println(userIndex);
-  		System.out.println(albumIndex);
+		photoIndex = index3;
 	} 
 	
 	public void initialize() throws ClassNotFoundException, IOException{
@@ -193,7 +190,7 @@ public class EditController implements Serializable {
 		loader.setLocation(getClass().getResource("/view/OpenAlbum.fxml"));
 		Parent root = loader.load();
 		OpenAlbumController controller = loader.getController();
-		controller.initData(users, userIndex, albums, albumIndex);
+		controller.initData(users, userIndex, albumIndex);
 		
 		Scene openAlbumScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
@@ -209,7 +206,7 @@ public class EditController implements Serializable {
 		loader.setLocation(getClass().getResource("/view/OpenAlbum.fxml"));
 		Parent root = loader.load();
 		OpenAlbumController controller = loader.getController();
-		controller.initData(users, userIndex, albums, albumIndex);
+		controller.initData(users, userIndex, albumIndex);
 		
 		Scene openAlbumScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
