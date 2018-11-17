@@ -56,45 +56,25 @@ public class AlbumDisplayController implements Serializable {
 	public void initData(List<User> user, int index) {
 		users = user;
 		userIndex = index;
-		albums = users.get(userIndex).getUserAlbums();
-		System.out.println(users);
-		System.out.println(userIndex);
-	}
-	
-	//first thing that happens when scene is loaded (must extend Application in class)
-	public void initialize() throws ClassNotFoundException, IOException {
-				
-		if(albums == null) {
-			albums = new ArrayList<AlbumInfo>();
-			obsList = FXCollections.observableArrayList(albums);
-			albumList.setItems(obsList);
-			//set stock photos first time scene is loaded
-			
-			
-			/** this is only for stock user this is adding it for every user
-			albumInfo = new AlbumInfo("Stock", 5, null, null);
-			obsList.add(albumInfo);
-			albums.add(albumInfo);
-			
-			**/
-		}
-		//executes if this is not the first time loading scene so that Stock album is not created again
-		else {
-			obsList = FXCollections.observableArrayList(albums);
-			albumList.setItems(obsList);
-		}
+		obsList = FXCollections.observableArrayList(users.get(userIndex).getUserAlbums());
+		albumList.setItems(obsList);
+		
 
 		if (obsList.isEmpty() && obsList != null) {
 			disable();
 		}
 		
 		albumList.getSelectionModel().select(0);
+	}
+	
+	//first thing that happens when scene is loaded (must extend Application in class)
+	public void initialize() throws ClassNotFoundException, IOException {
 	
 	}
 
 	//log out button takes you back to login scene
 	public void logOutButton(ActionEvent event) throws Exception {
-		writeApp(albums);
+		writeApp(users);
 		Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
 		Scene loginScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
@@ -106,7 +86,7 @@ public class AlbumDisplayController implements Serializable {
 	//open album button
 	//open album button to go to open album scene
 	public void openAlbumButton(ActionEvent event) throws Exception{
-		writeApp(albums);
+		writeApp(users);
 		
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("/view/OpenAlbum.fxml"));
@@ -142,7 +122,7 @@ public class AlbumDisplayController implements Serializable {
 	
 	//new album button
 	//text input dialogue pops up for user to enter name of new album
-	public void newAlbumButton(ActionEvent event){
+	public void newAlbumButton(ActionEvent event) throws IOException{
 		TextInputDialog dialog = new TextInputDialog();
 		dialog.setTitle("New Album");
 		dialog.setHeaderText("New Album");
@@ -166,12 +146,13 @@ public class AlbumDisplayController implements Serializable {
 				}
 				//adds album to list
 				obsList.add(albumInfo);	
-				albums.add(albumInfo);
+				users.get(userIndex).addToAlbums(albumInfo);
 				albumList.getSelectionModel().select(albumInfo);
 				able();
-				System.out.println(albums);
+				System.out.println(users.get(userIndex).getUserAlbums());
 			}
 		}
+		writeApp(users);
 	}
 	
 	//rename album button
@@ -221,7 +202,7 @@ public class AlbumDisplayController implements Serializable {
 		if (result.get() == ButtonType.OK){
 			int index = albumList.getSelectionModel().getSelectedIndex(); 
 			obsList.remove(index);
-			albums.remove(index);
+			users.get(userIndex).removeFromAlbum(index);
 			if (obsList.isEmpty() && obsList != null) {
 				disable();
 			}
@@ -254,10 +235,10 @@ public class AlbumDisplayController implements Serializable {
 	}
 	
 	public static final String storeDir = "docs";
-	public static final String storeFile = "albums.ser"; 
+	public static final String storeFile = "users.ser"; 
 	
-	public static void writeApp(List<AlbumInfo> albums) throws IOException {
+	public static void writeApp(List<User> users) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
-		oos.writeObject(albums);
+		oos.writeObject(users);
 	} 
 }

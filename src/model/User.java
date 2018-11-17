@@ -22,6 +22,10 @@ public class User implements Serializable{
 		userAlbums.add(album);
 	}
 	
+	public void removeFromAlbum(int index) {
+		userAlbums.remove(index);
+	}
+	
 	public ArrayList<AlbumInfo> getUserAlbums(){
 		return userAlbums;
 	}
