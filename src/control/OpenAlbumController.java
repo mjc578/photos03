@@ -20,6 +20,7 @@ import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -75,52 +76,50 @@ public class OpenAlbumController {
 	public void initialize() {
 		fileChooser = new FileChooser();
 		
-		ArrayList<Photo> arrayList = new ArrayList<Photo>();
-		
-		Photo photo = new Photo("caption wow", "Nov. 15, 2018", "stockPhotos/cactus.jpg" );
-		Photo photo2 = new Photo("pooooop", "Feb. 15, 1667", "stockPhotos/utensils.jpg" );
-		arrayList.add(photo);
-		arrayList.add(photo2);
+		arrayList = new ArrayList<Photo>();
 		
 		obsList = FXCollections.observableArrayList(arrayList);
 		listView.setItems(obsList);
-		
-		 listView.setCellFactory(param -> new ListCell<Photo>() {
-	            @Override
-	            public void updateItem(Photo name, boolean empty) {
-	                super.updateItem(name, empty);
-	                ImageView imageView = new ImageView();
-	                imageView.setFitWidth(75);
-	                imageView.setFitHeight(75);
-	                if (empty) {
-	                    setText(null);
-	                    setGraphic(null);
-	                } else {
-	                	for (int i=0; i<arrayList.size(); i++) {
-	                		if(name.getCaption().equals(obsList.get(i).getCaption())) {
-	                			imageView.setImage(new Image(obsList.get(i).getURL()));
-	                	
-		                    }
-	                	}
-	                    
-	                    
-	                    setText(name.getCaption());
-	                    setGraphic(imageView);
-	                }
-	            }
-	        });
-
         listView.getSelectionModel().select(0);    
         if (obsList != null && !obsList.isEmpty()) {
 			showPhotoDetails();
 		}
 	        
+        if (obsList.isEmpty() && obsList != null) {
+        	disable(true);
+        }
+        
         //listener
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
         	if(newVal != null) {
         		showPhotoDetails();
         	}
         });
+	}
+	
+	public void listCellFactory() {
+		listView.setCellFactory(param -> new ListCell<Photo>() {
+            @Override
+            public void updateItem(Photo name, boolean empty) {
+                super.updateItem(name, empty);
+                ImageView imageView = new ImageView();
+                imageView.setFitWidth(75);
+                imageView.setFitHeight(75);
+                if (empty) {
+                    setText(null);
+                    setGraphic(null);
+                } else {
+                	for (int i=0; i<arrayList.size(); i++) {
+                		if(name.getURL().equals(obsList.get(i).getURL())) {
+                			imageView.setImage(new Image("file:" + obsList.get(i).getURL()));
+	                    }
+                	}
+                    setText(name.getCaption());
+                    setGraphic(imageView);
+                }
+            }
+        });
+
 	}
 	
 	//back button takes you back to Album Display scene
@@ -141,13 +140,31 @@ public class OpenAlbumController {
 	//add photo button
 	//TODO: implement add button
 	public void addButton(ActionEvent event) throws MalformedURLException{
-		Photo p = new Photo(" ", " ", " ");
+		Photo p = new Photo(null, null, null);
 		fileChooser.setTitle("Open Resource File");
 		File file = fileChooser.showOpenDialog(null);
 		p.setURL(file.getAbsolutePath());
 		Image imageForFile = new Image("file:" + p.getURL());
-		System.out.println(p.getURL());
+		System.out.println("file:" + p.getURL());
 		clickedImageView.setImage(imageForFile);
+		
+		//add caption after photo is added
+		TextInputDialog dialog = new TextInputDialog();
+		dialog.setTitle("Caption");
+		dialog.setHeaderText("Caption");
+		dialog.setContentText("Enter caption for photo:");
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()) {
+			p.setCaption(result.get());
+		}
+
+		obsList.add(p);
+		arrayList.add(p);
+		listCellFactory();
+		
+		listView.getSelectionModel().select(p);
+		disable(false);
+		
 	}
 	
 	//delete button - deletes selected photo
@@ -158,10 +175,14 @@ public class OpenAlbumController {
 		
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
-		    //TODO: delete photo if ok is clicked
-		} else {
-		    //TODO: if cancel button is clicked (I don't think we have to put anything here but not sure rn)
-		}
+		   int index = listView.getSelectionModel().getSelectedIndex();
+		   obsList.remove(index);
+		   arrayList.remove(index); 
+		   
+		   if (obsList.isEmpty() && obsList != null) {
+				disable(true);
+			}
+		} 
 	}
 	
 	//copy button
@@ -213,13 +234,15 @@ public class OpenAlbumController {
 	// "<" button
 	//TODO: implement button
 	public void previousPhotoButton(ActionEvent event){
-		System.out.println("6");	
+		int index = listView.getSelectionModel().getSelectedIndex() - 1;
+		listView.getSelectionModel().select(index);
 	}
 	
 	// ">" button
 	//TODO: implement button
 	public void nextPhotoButton(ActionEvent event){
-		System.out.println("7");
+		int index = listView.getSelectionModel().getSelectedIndex() + 1;
+		listView.getSelectionModel().select(index);
 	}
 	
 	// edit button - takes you to edit scene
@@ -231,7 +254,6 @@ public class OpenAlbumController {
 		EditController controller = loader.getController();
 		controller.initData(users, userIndex, albums, albumIndex);
 		
-		
 		Scene EditScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
 		window.setScene(EditScene);
@@ -242,6 +264,24 @@ public class OpenAlbumController {
 	public void showPhotoDetails(){
 		dateTime.setText(listView.getSelectionModel().getSelectedItem().getDate());
 		caption.setText(listView.getSelectionModel().getSelectedItem().getCaption());
+		clickedImageView.setImage(new Image("file:" + listView.getSelectionModel().getSelectedItem().getURL()));
+		
+		if (listView.getSelectionModel().getSelectedIndex() == 0) {
+			previousPhotoButton.setDisable(true);
+		}
+		else { previousPhotoButton.setDisable(false);}
+		if (listView.getSelectionModel().getSelectedIndex() == obsList.size()-1) {
+			nextPhotoButton.setDisable(true);
+		}
+		else { nextPhotoButton.setDisable(false);}
+	
+	}
+	
+	public void disable(boolean tf){
+		editButton.setDisable(tf);
+		deleteButton.setDisable(tf);
+		copyButton.setDisable(tf);
+		moveButton.setDisable(tf);	
 	}
 	
 }
