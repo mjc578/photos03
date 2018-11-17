@@ -1,6 +1,9 @@
 package control;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -50,14 +53,16 @@ public class OpenAlbumController {
 	@FXML private Label albumName;
 	@FXML private ImageView clickedImageView;
 	@FXML private ListView<Photo> listView;
-	private ObservableList<Photo> obsList;
-	private ArrayList<Photo> arrayList;
 	
-	FileChooser fileChooser;
-    
+	private ObservableList<Photo> obsList;
     private List<User> users;
     private int albumIndex;
     private int userIndex;
+    private ArrayList<Photo> photos;
+    FileChooser fileChooser;
+    
+    public static final String storeDir = "docs";
+	public static final String storeFile = "users.ser"; 
     
   //gets selected album and user from albumDisplayController
   	public void initData(List<User> user, int index, int index2) {
@@ -65,36 +70,34 @@ public class OpenAlbumController {
   		users = user;
   		userIndex = index;
   		albumIndex = index2;
+  		photos = users.get(userIndex).getUserAlbums().get(albumIndex).getPhotos();
 
   		//initialize the file chooser
   		fileChooser = new FileChooser();
   		
-  		//set the obslist on the users list of photos in the album user clicked on
-  		
-  		
-  	}
-	
-	//first thing that happens when scene is loaded
-	public void initialize() {
-		
-		
-		obsList = FXCollections.observableArrayList(arrayList);
-		listView.setItems(obsList);
-        listView.getSelectionModel().select(0);    
-        if (obsList != null && !obsList.isEmpty()) {
+  		//set the obslist on the users list of photos in the album user clicked on and set the list view
+  		obsList = FXCollections.observableArrayList(photos);
+  		listView.setItems(obsList);
+  		listView.getSelectionModel().select(0);
+  		if (obsList != null && !obsList.isEmpty()) {
 			showPhotoDetails();
 		}
-	        
-        if (obsList.isEmpty() && obsList != null) {
+  		if (obsList.isEmpty() && obsList != null) {
         	disable(true);
         }
-        
-        //listener
+  		//listener for showing the photo details if they are clicked on
         listView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
         	if(newVal != null) {
         		showPhotoDetails();
         	}
         });
+        
+        listCellFactory();
+  	}
+	
+	//first thing that happens when scene is loaded
+	public void initialize() {
+		
 	}
 	
 	public void listCellFactory() {
@@ -109,7 +112,7 @@ public class OpenAlbumController {
                     setText(null);
                     setGraphic(null);
                 } else {
-                	for (int i=0; i<arrayList.size(); i++) {
+                	for (int i=0; i < photos.size(); i++) {
                 		if(name.getURL().equals(obsList.get(i).getURL())) {
                 			imageView.setImage(new Image("file:" + obsList.get(i).getURL()));
 	                    }
@@ -124,6 +127,9 @@ public class OpenAlbumController {
 	
 	//back button takes you back to Album Display scene
 	public void backButton(ActionEvent event) throws Exception{
+		users.get(userIndex).getUserAlbums().get(albumIndex).setPhotos(photos);
+		writeApp(users);
+		
 		FXMLLoader loader = new FXMLLoader();
 		loader.setLocation(getClass().getResource("/view/AlbumDisplay.fxml"));
 		Parent root = loader.load();
@@ -138,7 +144,6 @@ public class OpenAlbumController {
 	}
 	
 	//add photo button
-	//TODO: implement add button
 	public void addButton(ActionEvent event) throws MalformedURLException{
 		Photo p = new Photo(null, null, null);
 		fileChooser.setTitle("Open Resource File");
@@ -159,7 +164,7 @@ public class OpenAlbumController {
 		}
 
 		obsList.add(p);
-		arrayList.add(p);
+		photos.add(p);
 		listCellFactory();
 		
 		listView.getSelectionModel().select(p);
@@ -177,7 +182,7 @@ public class OpenAlbumController {
 		if (result.get() == ButtonType.OK){
 		   int index = listView.getSelectionModel().getSelectedIndex();
 		   obsList.remove(index);
-		   arrayList.remove(index); 
+		   photos.remove(index); 
 		   
 		   if (obsList.isEmpty() && obsList != null) {
 				disable(true);
@@ -232,14 +237,12 @@ public class OpenAlbumController {
 	}
 	
 	// "<" button
-	//TODO: implement button
 	public void previousPhotoButton(ActionEvent event){
 		int index = listView.getSelectionModel().getSelectedIndex() - 1;
 		listView.getSelectionModel().select(index);
 	}
 	
 	// ">" button
-	//TODO: implement button
 	public void nextPhotoButton(ActionEvent event){
 		int index = listView.getSelectionModel().getSelectedIndex() + 1;
 		listView.getSelectionModel().select(index);
@@ -286,4 +289,8 @@ public class OpenAlbumController {
 		moveButton.setDisable(tf);	
 	}
 	
+	public static void writeApp(List<User> tagApp) throws IOException {
+		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
+		oos.writeObject(tagApp);
+	} 
 }

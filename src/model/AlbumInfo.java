@@ -44,12 +44,20 @@ public class AlbumInfo implements Serializable{
 		this.endDateRange = endDateRange;
 	}
 	
+	public ArrayList<Photo> getPhotos(){
+		return photos;
+	}
+	
 	public void addPhoto(Photo p) {
 		photos.add(p);
 	}
 	
 	public void deletePhoto(int index) {
 		photos.remove(index);
+	}
+	
+	public void setPhotos(ArrayList<Photo> ps) {
+		photos = ps;
 	}
 	
 	@Override
