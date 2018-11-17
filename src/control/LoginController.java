@@ -35,7 +35,6 @@ public class LoginController implements Serializable{
 	@FXML private TextField username;
 	
 	private User user;
-	private ObservableList<User> obsList;
 	private List<User> users;
 	
 	//first thing that happens when scene is loaded
@@ -44,15 +43,10 @@ public class LoginController implements Serializable{
 		users = readApp();
 		if (users==null) {
 			users = new ArrayList<User>();
-			obsList = FXCollections.observableArrayList(users);
 			User stock = new User("stock");
-			obsList.add(stock);
 			users.add(stock);
 		}
-		else {
-			obsList = FXCollections.observableArrayList(users);
-		}
-
+		
 		loginButton.setDisable(true);
 		
 		username.textProperty().addListener((observable, oldValue, newValue) -> {

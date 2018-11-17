@@ -46,7 +46,7 @@
             <Insets left="20.0" />
          </padding>
       </ToolBar>
-      <ListView fx:id="albumList" layoutX="21.0" layoutY="109.0" prefHeight="424.0" prefWidth="857.0" />
+      <ListView fx:id="listView" layoutX="21.0" layoutY="109.0" prefHeight="424.0" prefWidth="857.0" />
       <Label layoutX="25.0" layoutY="62.0" prefHeight="35.0" prefWidth="183.0" text="Albums:">
          <font>
             <Font name="System Bold" size="26.0" />

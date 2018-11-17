@@ -26,7 +26,7 @@ public class User implements Serializable{
 		userAlbums.add(album);
 	}
 	
-	public void removeFromAlbum(int index) {
+	public void removeFromAlbums(int index) {
 		userAlbums.remove(index);
 	}
 	

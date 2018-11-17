@@ -52,12 +52,12 @@ public class AlbumInfo implements Serializable{
 		photos.add(p);
 	}
 	
-	public void deletePhoto(int index) {
+	public void removePhoto(int index) {
 		photos.remove(index);
 	}
 	
-	public void setPhotos(ArrayList<Photo> ps) {
-		photos = ps;
+	public void deletePhoto(int index) {
+		photos.remove(index);
 	}
 	
 	@Override

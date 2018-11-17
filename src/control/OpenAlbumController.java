@@ -58,7 +58,6 @@ public class OpenAlbumController {
     private List<User> users;
     private int albumIndex;
     private int userIndex;
-    private ArrayList<Photo> photos;
     FileChooser fileChooser;
     
     public static final String storeDir = "docs";
@@ -70,13 +69,12 @@ public class OpenAlbumController {
   		users = user;
   		userIndex = index;
   		albumIndex = index2;
-  		photos = users.get(userIndex).getUserAlbums().get(albumIndex).getPhotos();
 
   		//initialize the file chooser
   		fileChooser = new FileChooser();
   		
   		//set the obslist on the users list of photos in the album user clicked on and set the list view
-  		obsList = FXCollections.observableArrayList(photos);
+  		obsList = FXCollections.observableArrayList(users.get(userIndex).getUserAlbums().get(albumIndex).getPhotos());
   		listView.setItems(obsList);
   		listView.getSelectionModel().select(0);
   		if (obsList != null && !obsList.isEmpty()) {
@@ -112,7 +110,7 @@ public class OpenAlbumController {
                     setText(null);
                     setGraphic(null);
                 } else {
-                	for (int i=0; i < photos.size(); i++) {
+                	for (int i=0; i < users.get(userIndex).getUserAlbums().get(albumIndex).getPhotos().size(); i++) {
                 		if(name.getURL().equals(obsList.get(i).getURL())) {
                 			imageView.setImage(new Image("file:" + obsList.get(i).getURL()));
 	                    }
@@ -127,7 +125,6 @@ public class OpenAlbumController {
 	
 	//back button takes you back to Album Display scene
 	public void backButton(ActionEvent event) throws Exception{
-		users.get(userIndex).getUserAlbums().get(albumIndex).setPhotos(photos);
 		writeApp(users);
 		
 		FXMLLoader loader = new FXMLLoader();
@@ -150,7 +147,6 @@ public class OpenAlbumController {
 		File file = fileChooser.showOpenDialog(null);
 		p.setURL(file.getAbsolutePath());
 		Image imageForFile = new Image("file:" + p.getURL());
-		System.out.println("file:" + p.getURL());
 		clickedImageView.setImage(imageForFile);
 		
 		//add caption after photo is added
@@ -164,7 +160,7 @@ public class OpenAlbumController {
 		}
 
 		obsList.add(p);
-		photos.add(p);
+		users.get(userIndex).getUserAlbums().get(albumIndex).addPhoto(p);
 		listCellFactory();
 		
 		listView.getSelectionModel().select(p);
@@ -182,12 +178,14 @@ public class OpenAlbumController {
 		if (result.get() == ButtonType.OK){
 		   int index = listView.getSelectionModel().getSelectedIndex();
 		   obsList.remove(index);
-		   photos.remove(index); 
+		   users.get(userIndex).getUserAlbums().get(albumIndex).removePhoto(index); 
 		   
 		   if (obsList.isEmpty() && obsList != null) {
 				disable(true);
 			}
-		} 
+		}
+		//update the list when a photo is deleted
+		listCellFactory();
 	}
 	
 	//copy button
@@ -274,12 +272,15 @@ public class OpenAlbumController {
 		if (listView.getSelectionModel().getSelectedIndex() == 0) {
 			previousPhotoButton.setDisable(true);
 		}
-		else { previousPhotoButton.setDisable(false);}
+		else { 
+			previousPhotoButton.setDisable(false);
+		}
 		if (listView.getSelectionModel().getSelectedIndex() == obsList.size()-1) {
 			nextPhotoButton.setDisable(true);
 		}
-		else { nextPhotoButton.setDisable(false);}
-	
+		else { 
+			nextPhotoButton.setDisable(false);
+		}
 	}
 	
 	public void disable(boolean tf){

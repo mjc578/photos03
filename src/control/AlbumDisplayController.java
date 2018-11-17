@@ -43,10 +43,9 @@ public class AlbumDisplayController implements Serializable {
 	@FXML private Button searchButton;
 	@FXML private Button logOutButton;
 	@FXML private TextField searchBar;
-	@FXML private ListView<AlbumInfo> albumList;
+	@FXML private ListView<AlbumInfo> listView;
 	
 	private AlbumInfo albumInfo;
-	private List<AlbumInfo> albums;
 	private ObservableList<AlbumInfo> obsList;
 	
 	private List<User> users;
@@ -54,22 +53,20 @@ public class AlbumDisplayController implements Serializable {
 	
 	//gets selected user from loginController
 	public void initData(List<User> user, int index) {
+		//initialize the list of users and what user we are logged into
 		users = user;
 		userIndex = index;
+		//set the obslist on list of albums and set the list view
 		obsList = FXCollections.observableArrayList(users.get(userIndex).getUserAlbums());
-		albumList.setItems(obsList);
-		
-
+		listView.setItems(obsList);
 		if (obsList.isEmpty() && obsList != null) {
 			disable();
 		}
-		
-		albumList.getSelectionModel().select(0);
+		listView.getSelectionModel().select(0);
 	}
 	
 	//first thing that happens when scene is loaded (must extend Application in class)
 	public void initialize() throws ClassNotFoundException, IOException {
-	
 	}
 
 	//log out button takes you back to login scene
@@ -92,7 +89,7 @@ public class AlbumDisplayController implements Serializable {
 		loader.setLocation(getClass().getResource("/view/OpenAlbum.fxml"));
 		Parent root = loader.load();
 		OpenAlbumController controller = loader.getController();
-		controller.initData(users, userIndex, albumList.getSelectionModel().getSelectedIndex());
+		controller.initData(users, userIndex, listView.getSelectionModel().getSelectedIndex());
 		
 		Scene openAlbumScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
@@ -147,9 +144,8 @@ public class AlbumDisplayController implements Serializable {
 				//adds album to list
 				obsList.add(albumInfo);	
 				users.get(userIndex).addToAlbums(albumInfo);
-				albumList.getSelectionModel().select(albumInfo);
+				listView.getSelectionModel().select(albumInfo);
 				able();
-				System.out.println(users.get(userIndex).getUserAlbums());
 			}
 		}
 		writeApp(users);
@@ -159,7 +155,7 @@ public class AlbumDisplayController implements Serializable {
 	//text input dialogue pops up for user to enter new name of album
 	public void renameAlbumButton(ActionEvent event){
 		//TODO: get album name and display it in text box initially
-		String currentName = albumList.getSelectionModel().getSelectedItem().getName();
+		String currentName = listView.getSelectionModel().getSelectedItem().getName();
 		
 		TextInputDialog dialog = new TextInputDialog(currentName);
 		dialog.setTitle("Rename Album");
@@ -181,13 +177,12 @@ public class AlbumDisplayController implements Serializable {
 						return;
 					}
 				}
-				albumInfo = albumList.getSelectionModel().getSelectedItem();
-				int index = albumList.getSelectionModel().getSelectedIndex();
+				albumInfo = listView.getSelectionModel().getSelectedItem();
+				int index = listView.getSelectionModel().getSelectedIndex();
 				albumInfo.setName(result.get());
 				obsList.set(index, albumInfo);
-				albums.set(index, albumInfo);
-				albumList.getSelectionModel().select(index);
-				System.out.println(albums);
+				users.get(userIndex).getUserAlbums().set(index, albumInfo);
+				listView.getSelectionModel().select(index);
 			}		
 		}
 	}
@@ -200,9 +195,9 @@ public class AlbumDisplayController implements Serializable {
 		
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
-			int index = albumList.getSelectionModel().getSelectedIndex(); 
+			int index = listView.getSelectionModel().getSelectedIndex(); 
 			obsList.remove(index);
-			users.get(userIndex).removeFromAlbum(index);
+			users.get(userIndex).removeFromAlbums(index);
 			if (obsList.isEmpty() && obsList != null) {
 				disable();
 			}
