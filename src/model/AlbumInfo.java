@@ -6,7 +6,7 @@ import java.util.ArrayList;
 public class AlbumInfo implements Serializable{
 	
 	private String name;
-	private int numPhotos;
+	private int numPhotos=0;
 	private String startDateRange;
 	private String endDateRange;
 	private ArrayList<Photo> photos;
@@ -56,9 +56,7 @@ public class AlbumInfo implements Serializable{
 		photos.remove(index);
 	}
 	
-	public void deletePhoto(int index) {
-		photos.remove(index);
-	}
+
 	
 	@Override
     public String toString() {

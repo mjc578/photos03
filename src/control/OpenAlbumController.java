@@ -69,7 +69,8 @@ public class OpenAlbumController {
   		users = user;
   		userIndex = index;
   		albumIndex = index2;
-
+  		
+  		albumName.setText( users.get(userIndex).getUserAlbums().get(albumIndex).getName());
   		//initialize the file chooser
   		fileChooser = new FileChooser();
   		
@@ -95,7 +96,6 @@ public class OpenAlbumController {
 	
 	//first thing that happens when scene is loaded
 	public void initialize() {
-		
 	}
 	
 	public void listCellFactory() {
@@ -161,6 +161,7 @@ public class OpenAlbumController {
 
 		obsList.add(p);
 		users.get(userIndex).getUserAlbums().get(albumIndex).addPhoto(p);
+		users.get(userIndex).getUserAlbums().get(albumIndex).setNumPhotos(obsList.size());
 		listCellFactory();
 		
 		listView.getSelectionModel().select(p);
@@ -179,6 +180,7 @@ public class OpenAlbumController {
 		   int index = listView.getSelectionModel().getSelectedIndex();
 		   obsList.remove(index);
 		   users.get(userIndex).getUserAlbums().get(albumIndex).removePhoto(index); 
+		   users.get(userIndex).getUserAlbums().get(albumIndex).setNumPhotos(obsList.size());
 		   
 		   if (obsList.isEmpty() && obsList != null) {
 				disable(true);
@@ -222,8 +224,11 @@ public class OpenAlbumController {
 			//copy photo to selected album
 			else{
 				users.get(userIndex).getUserAlbums().get(choiceIndex).addPhoto(listView.getSelectionModel().getSelectedItem());
+				users.get(userIndex).getUserAlbums().get(choiceIndex).setNumPhotos(users.get(userIndex).getUserAlbums().get(choiceIndex).getNumPhotos()+1);
 			}
 		    
+		}
+		else {
 		}
 	}
 	
@@ -262,10 +267,14 @@ public class OpenAlbumController {
 				users.get(userIndex).getUserAlbums().get(choiceIndex).addPhoto(listView.getSelectionModel().getSelectedItem());
 				obsList.remove(listView.getSelectionModel().getSelectedIndex());
 				users.get(userIndex).getUserAlbums().get(albumIndex).removePhoto(listView.getSelectionModel().getSelectedIndex());
-			}
-		    
+				
+				users.get(userIndex).getUserAlbums().get(choiceIndex).setNumPhotos(users.get(userIndex).getUserAlbums().get(choiceIndex).getNumPhotos()+1);
+				users.get(userIndex).getUserAlbums().get(albumIndex).setNumPhotos(obsList.size());
+			
+			}   
 		}
-
+		else {
+		}
 	}
 	
 	// "<" button
