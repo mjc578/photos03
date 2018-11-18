@@ -110,7 +110,7 @@ public class OpenAlbumController {
                     setText(null);
                     setGraphic(null);
                 } else {
-                	for (int i=0; i < users.get(userIndex).getUserAlbums().get(albumIndex).getPhotos().size(); i++) {
+                	for (int i=0; i < obsList.size(); i++) {
                 		if(name.getURL().equals(obsList.get(i).getURL())) {
                 			imageView.setImage(new Image("file:" + obsList.get(i).getURL()));
 	                    }

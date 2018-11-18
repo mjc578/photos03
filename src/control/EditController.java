@@ -41,16 +41,12 @@ public class EditController implements Serializable {
 	@FXML private ListView<Tag> editTagListView;
 	
 	public static final String storeDir = "docs";
-	public static final String storeFile = "myTags.ser"; 
+	public static final String storeFile = "users.ser"; 
 	
 	//all the stuff user can edit and may want to save
 	
 	//the text of the caption previously there
 	private String caption;
-	//the photo that was clicked on and is being edited
-	private Photo photoClicked = new Photo("deepel", "bobby", " ");
-	//probably gonna wanna load this and serialize
-	private List<String> tagTypes;
 	//the edit tag list
 	private ObservableList<Tag> obsList;
 	
@@ -65,20 +61,12 @@ public class EditController implements Serializable {
 		userIndex = index;
 		albumIndex = index2;
 		photoIndex = index3;
-	} 
-	
-	public void initialize() throws ClassNotFoundException, IOException{
-		// TODO Auto-generated method stub
 		
-		photoClicked.addTag(new Tag("Person", "Susan"));
-		photoClicked.addTag(new Tag("Person", "Sesh"));
-		photoClicked.addTag(new Tag("Location", "Bikini Bottom"));
-		obsList = FXCollections.observableArrayList(photoClicked.getTags());
-		//sets the edit caption text with the caption of the ohoto that was clicked
-		editCaption.setText(photoClicked.getCaption());
+		obsList = FXCollections.observableArrayList(users.get(userIndex).getUserAlbums().get(albumIndex).getPhotos().get(photoIndex).getTags());
+		//sets the edit caption text with the caption of the photo that was clicked
+		editCaption.setText(users.get(userIndex).getUserAlbums().get(albumIndex).getPhotos().get(photoIndex).getCaption());
 		editTagListView.setItems(obsList);
-	}
-	
+	} 
 	
 	//delete button
 	public void deleteTagButton(ActionEvent event) {
@@ -97,7 +85,7 @@ public class EditController implements Serializable {
 	//add tag button
 	public void addTagButton(ActionEvent event) {		
 		//Choice Dialog to choose out of existing tag types
-		ChoiceDialog<String> dialog = new ChoiceDialog<>(tagTypes.get(0), tagTypes);
+		ChoiceDialog<String> dialog = new ChoiceDialog<>(users.get(userIndex).getTagTypes().get(0), users.get(userIndex).getTagTypes());
 		dialog.setTitle("New Tag");
 		dialog.setHeaderText("Choose the tag-type for your new tag.");
 		dialog.setContentText("Tag-Types:");
@@ -128,11 +116,11 @@ public class EditController implements Serializable {
 						errorMessageDup();
 						return;
 					}
-					
 					obsList.add(t);
+					users.get(userIndex).getUserAlbums().get(albumIndex).getPhotos().get(photoIndex).addTag(t);
 				}
 			}
-		}	
+		}
 	}
 	
 	//add tag-type button
@@ -229,8 +217,8 @@ public class EditController implements Serializable {
 		alert.showAndWait();
 	}
 	
-	public static void writeApp(List<String> tagApp) throws IOException {
+	public static void writeApp(List<User> usersList) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
-		oos.writeObject(tagApp);
+		oos.writeObject(usersList);
 	} 
 }

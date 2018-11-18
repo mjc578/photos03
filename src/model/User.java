@@ -34,6 +34,14 @@ public class User implements Serializable{
 		return userAlbums;
 	}
 	
+	public ArrayList<String> getTagTypes(){
+		return tagTypes;
+	}
+	
+	public void addTagType(String tt) {
+		tagTypes.add(tt);
+	}
+	
 	@Override
 	public String toString() {
 		return this.getUsername();
