@@ -192,46 +192,80 @@ public class OpenAlbumController {
 	public void copyButton(ActionEvent event){
 		//list of choices (albums)
 		List<String> choices = new ArrayList<>();
-		//TODO: load album names into array
-		choices.add("a");
-		choices.add("b");
-		choices.add("c");
+		//load album names into array
+		for (int i=0; i<users.get(userIndex).getUserAlbums().size(); i++) {
+			choices.add(i, users.get(userIndex).getUserAlbums().get(i).getName());
+		}
 
-		ChoiceDialog<String> dialog = new ChoiceDialog<>("b", choices);
+		ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
 		dialog.setTitle("Copy");
 		dialog.setHeaderText("Copy Photo");
 		dialog.setContentText("Choose which album you want to copy this photo to:");
-
+		
+		int choiceIndex = -1;
 		Optional<String> result = dialog.showAndWait();
+		for (int i=0; i<choices.size(); i++) {
+			if (result.get().equals(choices.get(i))) {
+				choiceIndex = i;
+			}
+		}
 		//if okay is clicked
-		//TODO: check if selected album is current album, else give an error. Or do not include current album in list of choices.
 		if (result.isPresent()){
-			//TODO: copy photo to selected album
-		    System.out.println("Your choice: " + result.get());
+			//check if selected album is current album, else give an error.
+			if (users.get(userIndex).getUserAlbums().get(albumIndex).getName().equals(result.get())) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error");
+				alert.setHeaderText("Invalid Input");
+				alert.setContentText("This photo is already in this album.");
+				alert.showAndWait();
+			}
+			//copy photo to selected album
+			else{
+				users.get(userIndex).getUserAlbums().get(choiceIndex).addPhoto(listView.getSelectionModel().getSelectedItem());
+			}
+		    
 		}
 	}
 	
 	//move button
 	public void moveButton(ActionEvent event){
-		//list of choices (albums)
 		List<String> choices = new ArrayList<>();
-		//TODO: load album names into array
-		choices.add("a");
-		choices.add("b");
-		choices.add("c");
-
-		ChoiceDialog<String> dialog = new ChoiceDialog<>("b", choices);
-		dialog.setTitle("Move");
-		dialog.setHeaderText("Move Photo");
-		dialog.setContentText("Choose which album you want to move this photo to:");
-
-		Optional<String> result = dialog.showAndWait();
-		//if okay is clicked
-		//TODO: check if selected album is current album, else give an error. Or do not include current album in list of choices.
-		if (result.isPresent()){
-			//TODO: move photo from current album to selected album
-		    System.out.println("Your choice: " + result.get());
+		//load album names into array
+		for (int i=0; i<users.get(userIndex).getUserAlbums().size(); i++) {
+			choices.add(i, users.get(userIndex).getUserAlbums().get(i).getName());
 		}
+
+		ChoiceDialog<String> dialog = new ChoiceDialog<>(choices.get(0), choices);
+		dialog.setTitle("Copy");
+		dialog.setHeaderText("Copy Photo");
+		dialog.setContentText("Choose which album you want to copy this photo to:");
+		
+		int choiceIndex = -1;
+		Optional<String> result = dialog.showAndWait();
+		for (int i=0; i<choices.size(); i++) {
+			if (result.get().equals(choices.get(i))) {
+				choiceIndex = i;
+			}
+		}
+		//if okay is clicked
+		if (result.isPresent()){
+			//check if selected album is current album, else give an error.
+			if (users.get(userIndex).getUserAlbums().get(albumIndex).getName().equals(result.get())) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Error");
+				alert.setHeaderText("Invalid Input");
+				alert.setContentText("This photo is already in this album.");
+				alert.showAndWait();
+			}
+			//add photo to selected album and delete from current album
+			else{
+				users.get(userIndex).getUserAlbums().get(choiceIndex).addPhoto(listView.getSelectionModel().getSelectedItem());
+				obsList.remove(listView.getSelectionModel().getSelectedIndex());
+				users.get(userIndex).getUserAlbums().get(albumIndex).removePhoto(listView.getSelectionModel().getSelectedIndex());
+			}
+		    
+		}
+
 	}
 	
 	// "<" button
