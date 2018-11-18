@@ -1,7 +1,9 @@
 package model;
 
+import java.io.Serializable;
+
 //class meant to represent a Tag object
-public class Tag {
+public class Tag implements Serializable {
 	
 	private String tagType;
 	private String tagValue;

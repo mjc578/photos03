@@ -11,6 +11,7 @@ public class Photo implements Serializable{
 	private String date;
 	private String url;
 	
+	//for intantiating a new photo
 	public Photo (String caption, String date, String url) {
 		this.caption = caption;
 		this.date = date;
@@ -46,7 +47,14 @@ public class Photo implements Serializable{
 		this.url = url;
 	}
 	
-	public String toString() {
-		return url + " - " + caption;	
+	public String displayTags() {
+		String tagString = "";
+		for(int i = 0; i < tags.size(); i++) {
+			tagString += (tags.get(i).toString());
+			if(i != tags.size() - 1) {
+				tagString += (", ");
+			}
+		}
+		return tagString;
 	}
 }

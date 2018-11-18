@@ -13,7 +13,7 @@ public class User implements Serializable{
 		this.username = username;
 		userAlbums = new ArrayList<AlbumInfo>();
 		tagTypes = new ArrayList<String>();
-		tagTypes.add("person");
+		tagTypes.add("Person");
 		tagTypes.add("Location");
 	}
 	

@@ -51,6 +51,7 @@ public class OpenAlbumController {
 	@FXML private Label dateTime;
 	@FXML private Label caption;
 	@FXML private Label albumName;
+	@FXML private Label tagsLabel;
 	@FXML private ImageView clickedImageView;
 	@FXML private ListView<Photo> listView;
 	
@@ -311,6 +312,7 @@ public class OpenAlbumController {
 		dateTime.setText(listView.getSelectionModel().getSelectedItem().getDate());
 		caption.setText(listView.getSelectionModel().getSelectedItem().getCaption());
 		clickedImageView.setImage(new Image("file:" + listView.getSelectionModel().getSelectedItem().getURL()));
+		tagsLabel.setText(listView.getSelectionModel().getSelectedItem().displayTags());
 		
 		if (listView.getSelectionModel().getSelectedIndex() == 0) {
 			previousPhotoButton.setDisable(true);
@@ -318,7 +320,7 @@ public class OpenAlbumController {
 		else { 
 			previousPhotoButton.setDisable(false);
 		}
-		if (listView.getSelectionModel().getSelectedIndex() == obsList.size()-1) {
+		if (listView.getSelectionModel().getSelectedIndex() == obsList.size() - 1) {
 			nextPhotoButton.setDisable(true);
 		}
 		else { 
