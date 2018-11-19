@@ -2,16 +2,17 @@ package model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class AlbumInfo implements Serializable{
 	
 	private String name;
 	private int numPhotos=0;
-	private String startDateRange;
-	private String endDateRange;
+	private Date startDateRange;
+	private Date endDateRange;
 	private ArrayList<Photo> photos;
 	
-	public AlbumInfo(String name, int numPhotos, String startDateRange, String endDateRange) {
+	public AlbumInfo(String name, int numPhotos, Date startDateRange, Date endDateRange) {
 		this.name = name;
 		this.numPhotos = numPhotos;
 		this.startDateRange = startDateRange;
@@ -31,16 +32,16 @@ public class AlbumInfo implements Serializable{
 	public void setNumPhotos(int numPhotos) {
 		this.numPhotos = numPhotos;
 	}
-	public String getStartDateRange() {
+	public Date getStartDateRange() {
 		return startDateRange;
 	}
-	public void setStartDateRange(String startDateRange) {
+	public void setStartDateRange(Date startDateRange) {
 		this.startDateRange = startDateRange;
 	}
-	public String getEndDateRange() {
+	public Date getEndDateRange() {
 		return endDateRange;
 	}
-	public void setEndDateRange(String endDateRange) {
+	public void setEndDateRange(Date endDateRange) {
 		this.endDateRange = endDateRange;
 	}
 	
@@ -60,8 +61,9 @@ public class AlbumInfo implements Serializable{
 	
 	@Override
     public String toString() {
-		return this.getName() + " - " + this.getNumPhotos() + " photos - starting " + this.getStartDateRange()+ " to " + this.getEndDateRange();
+		return this.getName() + " - " + this.getNumPhotos() + " photos - starting " + this.getStartDateRange() + " to " + this.getEndDateRange();
     }
+
 
 
 }

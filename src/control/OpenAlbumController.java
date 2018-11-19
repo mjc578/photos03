@@ -174,6 +174,29 @@ public class OpenAlbumController {
 		listView.getSelectionModel().select(p);
 		disable(false);
 		
+		//get start/end date of album
+		Calendar earliestPic = Calendar.getInstance();
+		Calendar latestPic = Calendar.getInstance();
+		earliestPic.setTime(obsList.get(0).getDate().getTime());
+		latestPic.setTime(obsList.get(0).getDate().getTime());
+		if (obsList.size()==1) {
+			users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange(p.getDate().getTime());
+			users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange(p.getDate().getTime());
+		}
+		for (int i=0; i<obsList.size(); i++) {
+			if (obsList.get(i).getDate().getTime().compareTo(earliestPic.getTime())<0) {
+				earliestPic.setTime(obsList.get(i).getDate().getTime());
+				users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange(earliestPic.getTime());
+			}
+			if (obsList.get(i).getDate().getTime().compareTo(latestPic.getTime())>0) {
+				latestPic.setTime(obsList.get(i).getDate().getTime());
+				users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange(latestPic.getTime());
+			}	
+		}
+		
+		
+		
+		
 	}
 	
 	//delete button - deletes selected photo
