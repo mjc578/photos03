@@ -26,6 +26,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
@@ -108,7 +109,12 @@ public class AlbumDisplayController implements Serializable {
 		}
 		//go to search scene
 		else {
-			Parent root = FXMLLoader.load(getClass().getResource("/view/Search.fxml"));
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getResource("/view/Search.fxml"));
+			Parent root = loader.load();
+			SearchController controller = loader.getController();
+			controller.initData(users, userIndex, searchBar.getText());
+			
 			Scene searchScene = new Scene(root);
 			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
 			window.setScene(searchScene);

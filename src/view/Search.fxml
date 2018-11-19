@@ -59,6 +59,7 @@
       <Label layoutX="469.0" layoutY="410.0" text="Caption:" />
       <Label fx:id="caption" alignment="TOP_LEFT" layoutX="540.0" layoutY="410.0" prefHeight="17.0" prefWidth="342.0" />
       <Label layoutX="469.0" layoutY="440.0" text="Tags:" />
-      <ListView layoutX="540.0" layoutY="440.0" prefHeight="82.0" prefWidth="342.0" />
+      <Label fx:id="tags" layoutX="540.0" layoutY="449.0" prefHeight="67.0" prefWidth="342.0" />
+      <ListView fx:id="listView" layoutX="14.0" layoutY="67.0" prefHeight="451.0" prefWidth="425.0" />
    </children>
 </AnchorPane>
