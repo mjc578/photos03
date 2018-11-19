@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -149,6 +151,10 @@ public class OpenAlbumController {
 		p.setURL(file.getAbsolutePath());
 		Image imageForFile = new Image("file:" + p.getURL());
 		clickedImageView.setImage(imageForFile);
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date(file.lastModified()));
+		c.set(Calendar.MILLISECOND, 0);
+		p.setDate(c);
 		
 		//add caption after photo is added
 		TextInputDialog dialog = new TextInputDialog();
@@ -185,6 +191,10 @@ public class OpenAlbumController {
 		   
 		   if (obsList.isEmpty() && obsList != null) {
 				disable(true);
+				dateTime.setText(null);
+				caption.setText(null);
+				clickedImageView.setImage(null);
+				tagsLabel.setText(null);
 			}
 		}
 		//update the list when a photo is deleted
@@ -266,15 +276,22 @@ public class OpenAlbumController {
 			//add photo to selected album and delete from current album
 			else{
 				users.get(userIndex).getUserAlbums().get(choiceIndex).addPhoto(listView.getSelectionModel().getSelectedItem());
-				obsList.remove(listView.getSelectionModel().getSelectedIndex());
-				users.get(userIndex).getUserAlbums().get(albumIndex).removePhoto(listView.getSelectionModel().getSelectedIndex());
+				
+				int index = listView.getSelectionModel().getSelectedIndex();
+				obsList.remove(index);
+				users.get(userIndex).getUserAlbums().get(albumIndex).removePhoto(index); 
 				
 				users.get(userIndex).getUserAlbums().get(choiceIndex).setNumPhotos(users.get(userIndex).getUserAlbums().get(choiceIndex).getNumPhotos()+1);
 				users.get(userIndex).getUserAlbums().get(albumIndex).setNumPhotos(obsList.size());
 			
+				if (obsList.isEmpty() && obsList != null) {
+					disable(true);
+					dateTime.setText(null);
+					caption.setText(null);
+					clickedImageView.setImage(null);
+					tagsLabel.setText(null);
+				}
 			}   
-		}
-		else {
 		}
 	}
 	
@@ -309,7 +326,7 @@ public class OpenAlbumController {
 	}
 	
 	public void showPhotoDetails(){
-		dateTime.setText(listView.getSelectionModel().getSelectedItem().getDate());
+		dateTime.setText(listView.getSelectionModel().getSelectedItem().getDate().getTime().toString());
 		caption.setText(listView.getSelectionModel().getSelectedItem().getCaption());
 		clickedImageView.setImage(new Image("file:" + listView.getSelectionModel().getSelectedItem().getURL()));
 		tagsLabel.setText(listView.getSelectionModel().getSelectedItem().displayTags());

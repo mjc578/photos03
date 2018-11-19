@@ -97,7 +97,19 @@ public class EditController implements Serializable {
 		
 		//if okay is clicked
 		if (result.isPresent()){
-		    
+			if (result.get().equals("Location")) {
+				for (int i=0; i<obsList.size(); i++) {
+					if (obsList.get(i).getTagType().equals("Location")) {
+						Alert alert = new Alert(AlertType.ERROR);
+						alert.setTitle("Error");
+						alert.setHeaderText("Location already exists");
+						alert.setContentText("Please try again.");
+						alert.showAndWait();
+						return;
+					}
+				}
+			}
+			
 		    //Text Input Dialog for new tag name after the tag type is selected
 		    TextInputDialog dialog2 = new TextInputDialog();
 			dialog2.setTitle("New Tag");

@@ -2,17 +2,19 @@ package model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class Photo implements Serializable{
 	
 	private List<Tag> tags;
 	private String caption;
-	private String date;
+	private Calendar date;
 	private String url;
 	
 	//for intantiating a new photo
-	public Photo (String caption, String date, String url) {
+	public Photo (String caption, Calendar date, String url) {
 		this.caption = caption;
 		this.date = date;
 		this.url = url;
@@ -35,8 +37,12 @@ public class Photo implements Serializable{
 		this.caption = caption;
 	}
 	
-	public String getDate() {
+	public Calendar getDate() {
 		return date;
+	}
+	
+	public void setDate(Calendar date) {
+		this.date = date;
 	}
 	
 	public String getURL() {
