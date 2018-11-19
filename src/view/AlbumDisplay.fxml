@@ -5,6 +5,7 @@
 <?import javafx.scene.control.ButtonBar?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.control.ToolBar?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -38,8 +39,10 @@
       <ToolBar prefHeight="50.0" prefWidth="900.0" AnchorPane.leftAnchor="0.0">
          <items>
             <TextField fx:id="searchBar" prefHeight="25.0" prefWidth="319.0" promptText="&quot;tag-type=tag value AND/OR &quot;tag-type=tag value&quot;&quot;" />
+            <RadioButton fx:id="tagRadioButton" mnemonicParsing="false" text="Tag" />
+            <RadioButton fx:id="dateRadioButton" mnemonicParsing="false" text="Date" />
             <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButton" prefHeight="25.0" prefWidth="78.0" text="Search" />
-            <Label prefHeight="17.0" prefWidth="361.0" />
+            <Label prefHeight="17.0" prefWidth="278.0" />
             <Button fx:id="logOutButton" mnemonicParsing="false" onAction="#logOutButton" prefHeight="25.0" prefWidth="92.0" text="Log Out" />
          </items>
          <padding>

@@ -26,7 +26,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
+import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
@@ -42,6 +44,8 @@ public class AlbumDisplayController implements Serializable {
 	@FXML private Button deleteAlbumButton;
 	@FXML private Button searchButton;
 	@FXML private Button logOutButton;
+	@FXML private RadioButton tagRadioButton;
+	@FXML private RadioButton dateRadioButton;
 	@FXML private TextField searchBar;
 	@FXML private ListView<AlbumInfo> listView;
 	
@@ -105,10 +109,22 @@ public class AlbumDisplayController implements Serializable {
 		//alert dialogue if no user input was entered
 		if (searchBar.getText().equals("")) {
 			errorMessage();
+			return;
+		}
+		if (tagRadioButton.isSelected() && dateRadioButton.isSelected()) {
+			errorMessage();
+		}
+		if (!tagRadioButton.isSelected() && !dateRadioButton.isSelected()) {
+			errorMessage();
 		}
 		//go to search scene
 		else {
-			Parent root = FXMLLoader.load(getClass().getResource("/view/Search.fxml"));
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getResource("/view/Search.fxml"));
+			Parent root = loader.load();
+			SearchController controller = loader.getController();
+			controller.initData(users, userIndex, searchBar.getText());
+			
 			Scene searchScene = new Scene(root);
 			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
 			window.setScene(searchScene);
