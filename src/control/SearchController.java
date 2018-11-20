@@ -43,11 +43,13 @@ public class SearchController {
 	private String searchQuery;
 	
 	//gets selected user and search query from the album display controller
-	public void initData(List<User> user, int index, String query) {
+	public void initData(List<User> user, int index, String query, String queryType) {
 		//initialize the list of users and what user we are logged into
 		users = user;
 		userIndex = index;
 		searchQuery = query;
+		
+		//process the query based on what type it happens to be
 	}
 	
 	public void listCellFactory() {

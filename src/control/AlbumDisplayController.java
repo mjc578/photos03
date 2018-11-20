@@ -123,8 +123,12 @@ public class AlbumDisplayController implements Serializable {
 			loader.setLocation(getClass().getResource("/view/Search.fxml"));
 			Parent root = loader.load();
 			SearchController controller = loader.getController();
-			controller.initData(users, userIndex, searchBar.getText());
-			
+			if(tagRadioButton.isSelected()) {
+				controller.initData(users, userIndex, searchBar.getText(), "tagQuery");
+			}
+			else {
+				controller.initData(users, userIndex, searchBar.getText(), "dateQuery");
+			}
 			Scene searchScene = new Scene(root);
 			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
 			window.setScene(searchScene);
