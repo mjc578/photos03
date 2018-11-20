@@ -5,6 +5,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Optional;
 
@@ -64,7 +65,7 @@ public class SearchController {
 		}
 		//searching by date
 		else {
-			//searchByDate();
+			searchByDate();
 		}
 		//TODO: disable the list view and show text that says no search results!
 		listView.setItems(obsList);
@@ -73,7 +74,7 @@ public class SearchController {
 	}
 	
 	//if the user selected search by tag
-	public void searchByTag() {
+	private void searchByTag() {
 		//split the query up if it is a conjuctive/disjunctive whatever
 		String args[] = searchQuery.split(" ");
 		//only one tag-value and type pair was entered
@@ -121,12 +122,115 @@ public class SearchController {
 		}
 	}
 	
+	//and search
 	private void andTagSearch(String args[]) {
+		Tag t1 = null;
+		Tag t2 = null;
+		String searchTerms1[] = args[0].split("=");
+		String searchTerms2[] = args[2].split("=");
 		
+		//set the tag to look for for tag t1
+		for(TagType tt1 : users.get(userIndex).getTagTypes()) {
+			if(tt1.getType().equals(searchTerms1[0])) {
+				t1 = new Tag(tt1, searchTerms1[1]);
+			}
+		}
+		//set the tag to look for for tag t2
+		for(TagType tt2 : users.get(userIndex).getTagTypes()) {
+			if(tt2.getType().equals(searchTerms2[0])) {
+				t2 = new Tag(tt2, searchTerms2[1]);
+			}
+		}
+		
+		//and only works if both of the tags are not null, so no search results can come up if both are null
+		if(t1 == null || t2 == null) {
+			return;
+		}
+		
+		//if the tag search by is the same type for both tags, check that it is multi valued, if not, return
+		if(!t1.getTagType().isMultiValued() && t1.getTagType().equals(t2.getTagType())) {
+			//TODO: show that the user entered a bad input and to redo, maybe do it in previous screen
+			return;
+		}
+		
+		//ok now search! a photo must have both tags for this to work, good luck
+		List<AlbumInfo> albums = users.get(userIndex).getUserAlbums();
+		for(int i = 0; i < albums.size(); i++) {
+			for(int j = 0; j < albums.get(i).getNumPhotos(); j++) {
+				Photo p = albums.get(i).getPhotos().get(j);
+				//if the album's current photo has this tag, add to list if it isnt already
+				if((p.getTags().contains(t1) && p.getTags().contains(t2)) && !obsList.contains(p)) {
+					obsList.add(p);
+				}
+			}
+		}
 	}
 	
+	//or search
 	private void orTagSearch(String args[]) {
+		Tag t1 = null;
+		Tag t2 = null;
+		String searchTerms1[] = args[0].split("=");
+		String searchTerms2[] = args[2].split("=");
 		
+		//set the tag to look for for tag t1
+		for(TagType tt1 : users.get(userIndex).getTagTypes()) {
+			if(tt1.getType().equals(searchTerms1[0])) {
+				t1 = new Tag(tt1, searchTerms1[1]);
+			}
+		}
+		//set the tag to look for for tag t2
+		for(TagType tt2 : users.get(userIndex).getTagTypes()) {
+			if(tt2.getType().equals(searchTerms2[0])) {
+				t2 = new Tag(tt2, searchTerms2[1]);
+			}
+		}
+		
+		//or works if both are not null
+		if(t1 == null && t2 == null) {
+			return;
+		}
+		
+		//ok now search! a photo can have either/both tags for this to work
+		List<AlbumInfo> albums = users.get(userIndex).getUserAlbums();
+		for(int i = 0; i < albums.size(); i++) {
+			for(int j = 0; j < albums.get(i).getNumPhotos(); j++) {
+				Photo p = albums.get(i).getPhotos().get(j);
+				//if the album's current photo has this tag, add to list if it isnt already
+				if((p.getTags().contains(t1) || p.getTags().contains(t2)) && !obsList.contains(p)) {
+					obsList.add(p);
+				}
+			}
+		}
+	}
+
+	private void searchByDate() {
+		//split the query up by spaces, should be of XX/XX/XXXX TO XX/XX/XXXX
+		String args[] = searchQuery.split(" ");
+		
+		String startArgs[] = args[0].split("/");
+		String endArgs[] = args[2].split("/");
+		
+		Calendar start = Calendar.getInstance();
+		Calendar end = Calendar.getInstance();
+		
+		start.set(Integer.parseInt(startArgs[2]), Integer.parseInt(startArgs[0]) - 1, Integer.parseInt(startArgs[1]), 23, 59, 59);
+		end.set(Integer.parseInt(endArgs[2]), Integer.parseInt(endArgs[0]) - 1, Integer.parseInt(endArgs[1]), 23, 59, 59);
+		
+		System.out.println(start.getTime() + " " + end.getTime());
+		
+		//now that the dates are set, go through the list of albums and photos and if the photo lies in the date range
+		//add it to the obslist
+		List<AlbumInfo> albums = users.get(userIndex).getUserAlbums();
+		for(int i = 0; i < albums.size(); i++) {
+			for(int j = 0; j < albums.get(i).getNumPhotos(); j++) {
+				Photo p = albums.get(i).getPhotos().get(j);
+				//check if the current photo is within the start and end date range
+				if(p.getDate().compareTo(start) >= 0 && p.getDate().compareTo(end) <= 0) {
+					obsList.add(p);
+				}
+			}
+		}
 	}
 	
 	public void listCellFactory() {
