@@ -38,7 +38,7 @@
       </ButtonBar>
       <ToolBar prefHeight="50.0" prefWidth="900.0" AnchorPane.leftAnchor="0.0">
          <items>
-            <TextField fx:id="searchBar" prefHeight="25.0" prefWidth="319.0" promptText="&quot;tag-type=tag value AND/OR &quot;tag-type=tag value&quot;&quot;" />
+            <TextField fx:id="searchBar" prefHeight="25.0" prefWidth="319.0"/>
             <RadioButton fx:id="tagRadioButton" mnemonicParsing="false" text="Tag" />
             <RadioButton fx:id="dateRadioButton" mnemonicParsing="false" text="Date" />
             <Button fx:id="searchButton" mnemonicParsing="false" onAction="#searchButton" prefHeight="25.0" prefWidth="78.0" text="Search" />

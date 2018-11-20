@@ -31,6 +31,7 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.RadioButton;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.Stage;
 import model.AlbumInfo;
@@ -48,6 +49,9 @@ public class AlbumDisplayController implements Serializable {
 	@FXML private RadioButton dateRadioButton;
 	@FXML private TextField searchBar;
 	@FXML private ListView<AlbumInfo> listView;
+	
+	//group for the radio buttons
+	final ToggleGroup group = new ToggleGroup();
 	
 	private AlbumInfo albumInfo;
 	private ObservableList<AlbumInfo> obsList;
@@ -74,6 +78,25 @@ public class AlbumDisplayController implements Serializable {
 		}
 		
 		listView.getSelectionModel().select(0);
+		searchBar.setPromptText("example: person=sesh || person=sesh OR location=prague || person=sesh AND location=prague");
+		
+		//set the radiobuttons
+		tagRadioButton.setToggleGroup(group);
+		tagRadioButton.setUserData("Tag");
+		tagRadioButton.setSelected(true);
+
+		dateRadioButton.setToggleGroup(group);
+		dateRadioButton.setUserData("Date");
+		
+		group.selectedToggleProperty().addListener((observable, oldVal, newVal) -> {
+			if(newVal.getUserData().equals("Tag")) {
+				searchBar.setPromptText("example: person=sesh || person=sesh OR location=prague || person=sesh AND location=prague");
+			}
+			else {
+				searchBar.setPromptText("MM/DD/YYYY to MM/DD/YYYY");
+			}
+		});
+
 	}
 	
 	//first thing that happens when scene is loaded (must extend Application in class)
