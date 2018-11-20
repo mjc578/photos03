@@ -61,5 +61,6 @@
       <Label layoutX="469.0" layoutY="440.0" text="Tags:" />
       <Label fx:id="tags" layoutX="540.0" layoutY="449.0" prefHeight="67.0" prefWidth="342.0" />
       <ListView fx:id="listView" layoutX="14.0" layoutY="67.0" prefHeight="451.0" prefWidth="425.0" />
+      <Label fx:id= "searchRes" layoutX="101.0" layoutY="251.0" prefHeight="50.0" prefWidth="244.0" text="No search results. Try again." textAlignment="CENTER" />
    </children>
 </AnchorPane>

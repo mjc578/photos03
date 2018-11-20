@@ -43,6 +43,7 @@ public class SearchController {
 	@FXML private Label dateTime;
 	@FXML private Label caption;
 	@FXML private Label tags;
+	@FXML private Label searchRes;
 	
 	private ObservableList<Photo> obsList;
 	
@@ -57,6 +58,8 @@ public class SearchController {
 		userIndex = index;
 		searchQuery = query;
 		
+		searchRes.setDisable(true);
+		
 		obsList = FXCollections.observableArrayList();
 		//process the query based on what type it happens to be
 		//searching by tag
@@ -67,10 +70,16 @@ public class SearchController {
 		else {
 			searchByDate();
 		}
-		//TODO: disable the list view and show text that says no search results!
-		listView.setItems(obsList);
-		
-		listCellFactory();
+		//if there are actually search results
+		if(obsList.size() != 0) {
+			listView.setItems(obsList);
+			listCellFactory();
+		}
+		//There are no search results, disable the list view and show text that says no search results, PANIC!
+		else {
+			disableStuff(true);
+			searchRes.setDisable(false);
+		}
 	}
 	
 	//if the user selected search by tag
@@ -208,17 +217,21 @@ public class SearchController {
 		//split the query up by spaces, should be of XX/XX/XXXX TO XX/XX/XXXX
 		String args[] = searchQuery.split(" ");
 		
+		//bad input
+		if(args.length != 3) {
+			return;
+		}
+		
 		String startArgs[] = args[0].split("/");
 		String endArgs[] = args[2].split("/");
 		
 		Calendar start = Calendar.getInstance();
 		Calendar end = Calendar.getInstance();
 		
-		start.set(Integer.parseInt(startArgs[2]), Integer.parseInt(startArgs[0]) - 1, Integer.parseInt(startArgs[1]), 23, 59, 59);
+		start.set(Integer.parseInt(startArgs[2]), Integer.parseInt(startArgs[0]) - 1, Integer.parseInt(startArgs[1]), 0, 0, 0);
 		end.set(Integer.parseInt(endArgs[2]), Integer.parseInt(endArgs[0]) - 1, Integer.parseInt(endArgs[1]), 23, 59, 59);
 		
-		System.out.println(start.getTime() + " " + end.getTime());
-		
+				
 		//now that the dates are set, go through the list of albums and photos and if the photo lies in the date range
 		//add it to the obslist
 		List<AlbumInfo> albums = users.get(userIndex).getUserAlbums();
@@ -290,24 +303,36 @@ public class SearchController {
 			if (result.get().equals("")) {
 				errorMessage();
 			}
-			//TODO: if album name already exists, send error message
-			//TODO: add album to list
 			else {
-				System.out.println("album name: " + result.get());
+				//there is input for the album name, now check if it is a duplicate
+				for(AlbumInfo ai : users.get(userIndex).getUserAlbums()) {
+					if(ai.getName().equals(result.get())) {
+						errorMessage();
+						return;
+					}
+				}
+				//ok so if there were no duplicates create a new album to populate
+				AlbumInfo newlyMadeAlbum = new AlbumInfo(result.get(), 0, null, null);
+				//...and then populate it bang bang
+				for(Photo p : obsList) {
+					newlyMadeAlbum.addPhoto(p);
+				}
+				//add it to the user's list of albums and you are done
+				users.get(userIndex).addToAlbums(newlyMadeAlbum);
 			}
 		}
 	}
 	
 	//Next Photo Button
-	//TODO:implement button
 	public void nextPhotoButton(ActionEvent event) {
-		System.out.println("heck");
+		int index = listView.getSelectionModel().getSelectedIndex() + 1;
+		listView.getSelectionModel().select(index);
 	}
 	
 	//Previous Photo Button
-	//TODO: implement button
 	public void previousPhotoButton(ActionEvent event) {
-		System.out.println("ahh");
+		int index = listView.getSelectionModel().getSelectedIndex() - 1;
+		listView.getSelectionModel().select(index);
 	}
 	
 	//error alert for invalid inputs
@@ -319,12 +344,20 @@ public class SearchController {
 		alert.showAndWait();
 	}
 	
+	public void disableStuff(boolean tf) {
+		createAlbumButton.setDisable(tf);
+		previousPhotoButton.setDisable(tf);
+		nextPhotoButton.setDisable(tf);
+		listView.setDisable(tf);
+	}
+	
 	public static final String storeDir = "docs";
 	public static final String storeFile = "users.ser"; 
 	
 	public static void writeApp(List<User> users) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
 		oos.writeObject(users);
+		oos.close();
 	} 
 	
 }
