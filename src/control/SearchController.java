@@ -1,5 +1,9 @@
 package control;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +26,10 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
+import model.AlbumInfo;
 import model.Photo;
+import model.Tag;
+import model.TagType;
 import model.User;
 
 public class SearchController {
@@ -49,7 +56,77 @@ public class SearchController {
 		userIndex = index;
 		searchQuery = query;
 		
+		obsList = FXCollections.observableArrayList();
 		//process the query based on what type it happens to be
+		//searching by tag
+		if(queryType.equals("tagQuery")) {
+			searchByTag();
+		}
+		//searching by date
+		else {
+			//searchByDate();
+		}
+		//TODO: disable the list view and show text that says no search results!
+		listView.setItems(obsList);
+		
+		listCellFactory();
+	}
+	
+	//if the user selected search by tag
+	public void searchByTag() {
+		//split the query up if it is a conjuctive/disjunctive whatever
+		String args[] = searchQuery.split(" ");
+		//only one tag-value and type pair was entered
+		if(args.length == 1) {
+			singleArgTagSearch(args);
+		}
+		//otherwise it is a conjunctive disjunctive thingy that has three elements
+		else {
+			//if its is AND
+			if(args[1].equals("AND")) {
+				andTagSearch(args);
+			}
+			//ptherwise OR
+			else {
+				orTagSearch(args);
+			}
+		}
+	}
+	
+	//the user only entered a single search item for a tag
+	private void singleArgTagSearch(String args[]) {
+		Tag t = null;
+		//get the tag type and value
+		String searchTerms[] = args[0].split("=");
+		for(TagType tt : users.get(userIndex).getTagTypes()) {
+			if(tt.getType().equals(searchTerms[0])) {
+				t = new Tag(tt, searchTerms[1]);
+			}
+		}
+		//the tag type doesn't even exist
+		if(t == null) {
+			return;
+		}
+		//for each of the user's albums, look through all the photos and add to the obslist if:
+		//it is not there and it has the matching tag
+		List<AlbumInfo> albums = users.get(userIndex).getUserAlbums();
+		for(int i = 0; i < albums.size(); i++) {
+			for(int j = 0; j < albums.get(i).getNumPhotos(); j++) {
+				Photo p = albums.get(i).getPhotos().get(j);
+				//if the album's current photo has this tag, add to list if it isnt already
+				if(p.getTags().contains(t) && !obsList.contains(p)) {
+					obsList.add(p);
+				}
+			}
+		}
+	}
+	
+	private void andTagSearch(String args[]) {
+		
+	}
+	
+	private void orTagSearch(String args[]) {
+		
 	}
 	
 	public void listCellFactory() {
@@ -79,10 +156,17 @@ public class SearchController {
 	
 	//back button to go back to album display scene
 	public void backButton(ActionEvent event) throws Exception {
-		Parent root = FXMLLoader.load(getClass().getResource("/view/AlbumDisplay.fxml"));
-		Scene albumDisplayScene = new Scene(root);
+		writeApp(users);
+		FXMLLoader loader = new FXMLLoader();
+		loader.setLocation(getClass().getResource("/view/AlbumDisplay.fxml"));
+		Parent root = loader.load();
+		AlbumDisplayController controller = loader.getController();
+		controller.initData(users, userIndex);
+		
+		Scene openAlbumScene = new Scene(root);
 		Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
-		window.setScene(albumDisplayScene);
+		window.setScene(openAlbumScene);
+
 		window.setTitle("Album Display");
 		window.show();
 	}
@@ -123,13 +207,20 @@ public class SearchController {
 	}
 	
 	//error alert for invalid inputs
-		public void errorMessage() {
-			Alert alert = new Alert(AlertType.ERROR);
-			alert.setTitle("Error");
-			alert.setHeaderText("Invalid Input");
-			alert.setContentText("Please try again.");
-			alert.showAndWait();
-		}
+	public void errorMessage() {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle("Error");
+		alert.setHeaderText("Invalid Input");
+		alert.setContentText("Please try again.");
+		alert.showAndWait();
+	}
 	
+	public static final String storeDir = "docs";
+	public static final String storeFile = "users.ser"; 
+	
+	public static void writeApp(List<User> users) throws IOException {
+		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
+		oos.writeObject(users);
+	} 
 	
 }

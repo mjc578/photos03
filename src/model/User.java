@@ -7,14 +7,14 @@ public class User implements Serializable{
 	
 	private String username;
 	private ArrayList<AlbumInfo> userAlbums;
-	private ArrayList<String> tagTypes;
+	private ArrayList<TagType> tagTypes;
 	
 	public User(String username) {
 		this.username = username;
 		userAlbums = new ArrayList<AlbumInfo>();
-		tagTypes = new ArrayList<String>();
-		tagTypes.add("Person");
-		tagTypes.add("Location");
+		tagTypes = new ArrayList<TagType>();
+		tagTypes.add(new TagType("person", true));
+		tagTypes.add(new TagType("location", false));
 	}
 	
 	public String getUsername() {
@@ -34,11 +34,11 @@ public class User implements Serializable{
 		return userAlbums;
 	}
 	
-	public ArrayList<String> getTagTypes(){
+	public ArrayList<TagType> getTagTypes(){
 		return tagTypes;
 	}
 	
-	public void addTagType(String tt) {
+	public void addTagType(TagType tt) {
 		tagTypes.add(tt);
 	}
 	

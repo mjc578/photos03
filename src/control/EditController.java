@@ -26,6 +26,7 @@ import javafx.stage.Stage;
 import model.AlbumInfo;
 import model.Photo;
 import model.Tag;
+import model.TagType;
 import model.User;
 
 public class EditController implements Serializable {
@@ -89,20 +90,22 @@ public class EditController implements Serializable {
 	//add tag button
 	public void addTagButton(ActionEvent event) {		
 		//Choice Dialog to choose out of existing tag types
-		ChoiceDialog<String> dialog = new ChoiceDialog<>(users.get(userIndex).getTagTypes().get(0), users.get(userIndex).getTagTypes());
+		ChoiceDialog<TagType> dialog = new ChoiceDialog<>(users.get(userIndex).getTagTypes().get(0), users.get(userIndex).getTagTypes());
 		dialog.setTitle("New Tag");
 		dialog.setHeaderText("Choose the tag-type for your new tag.");
 		dialog.setContentText("Tag-Types:");
-		Optional<String> result = dialog.showAndWait();
+		Optional<TagType> result = dialog.showAndWait();
 		
 		//if okay is clicked
 		if (result.isPresent()){
-			if (result.get().equals("Location")) {
-				for (int i=0; i<obsList.size(); i++) {
-					if (obsList.get(i).getTagType().equals("Location")) {
+			//if the tag type they chose is not multi valued, check if there already exists one in the list
+			//if there is one, they may not add another one, this check is unneccesary for checking if it is multi valued
+			if (!result.get().isMultiValued()) {
+				for (Tag st : obsList) {
+					if (st.getTagType().getType().equals(result.get().getType())) {
 						Alert alert = new Alert(AlertType.ERROR);
 						alert.setTitle("Error");
-						alert.setHeaderText("Location already exists");
+						alert.setHeaderText("Single-typed tag already exists");
 						alert.setContentText("Please try again.");
 						alert.showAndWait();
 						return;
@@ -153,16 +156,43 @@ public class EditController implements Serializable {
 			if (result.get().equals("")) {
 				errorMessage();
 			}
-			//if tag type already exists, give an error
-			else if(users.get(userIndex).getTagTypes().contains(result.get())) {
-				errorMessageDup();
-			}
+			//the silly user entered something tangible
 			else {
-				//adds tag type
-				users.get(userIndex).getTagTypes().add(result.get());
+				//if the string entered is already a tag type the user has
+				for(TagType ttt : users.get(userIndex).getTagTypes()) {
+					if(ttt.getType().toLowerCase().equals(result.get().toLowerCase())) {
+						errorMessageDup();
+						return;
+					}
+				}
+
+				ChoiceDialog<String> dialog2 = new ChoiceDialog<String>("Yes", "No");
+				dialog2.setTitle("New Tag-Type");
+				dialog2.setHeaderText("New Tag-Type");
+				dialog2.setContentText("Is the Tag-Type multi-valued?");
+				Optional<String> result2 = dialog2.showAndWait();
+				
+				if(result2.isPresent()) {
+					TagType tt;
+					//tag type is multi valued
+					if(result2.equals("Yes")) {
+						tt = new TagType(result.get(), true);
+					}
+					//otherwise, it is not multivalued
+					else {
+						tt = new TagType(result.get(), false);
+					}
+					//if the tag type already hecking exists
+					if(users.get(userIndex).getTagTypes().contains(tt)) {
+						errorMessageDup();
+					}
+					else {
+						//adds tag type
+						users.get(userIndex).getTagTypes().add(tt);
+					}
+				}
 			}
 		}
-
 	}
 	
 	//confirm button to confirm edited caption, tags, and tag-types
@@ -229,5 +259,6 @@ public class EditController implements Serializable {
 	public static void writeApp(List<User> usersList) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
 		oos.writeObject(usersList);
+		oos.close();
 	} 
 }

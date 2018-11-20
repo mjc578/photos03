@@ -107,6 +107,7 @@ public class AlbumDisplayController implements Serializable {
 	public void searchButton(ActionEvent event) throws Exception {
 		//checks if there is text in search bar
 		//alert dialogue if no user input was entered
+		writeApp(users);
 		if (searchBar.getText().equals("")) {
 			errorMessage();
 			return;
@@ -153,7 +154,7 @@ public class AlbumDisplayController implements Serializable {
 				errorMessage();
 			}
 			else {
-				AlbumInfo albumInfo = new AlbumInfo((String)result.get(), 0, null, null);
+				AlbumInfo albumInfo = new AlbumInfo((String)result.get(), 0, "*", "*");
 				//error message if album name already exists
 				for(int i=0; i<obsList.size(); i++) {
 					if(obsList.get(i).getName().toLowerCase().equals(albumInfo.getName().toLowerCase())) {

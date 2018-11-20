@@ -28,17 +28,12 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.GridPane;
-import javafx.scene.paint.Color;
 import javafx.scene.control.Alert.AlertType;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.util.Callback;
-import model.AlbumInfo;
 import model.Photo;
 import model.User;
 import javafx.scene.control.ListCell;
-import javafx.scene.control.ListView;
 
 public class OpenAlbumController {
 	
@@ -97,10 +92,6 @@ public class OpenAlbumController {
         listCellFactory();
   	}
 	
-	//first thing that happens when scene is loaded
-	public void initialize() {
-	}
-	
 	public void listCellFactory() {
 		listView.setCellFactory(param -> new ListCell<Photo>() {
             @Override
@@ -145,12 +136,19 @@ public class OpenAlbumController {
 	
 	//add photo button
 	public void addButton(ActionEvent event) throws MalformedURLException{
+		//get the photo from the file chooser
 		Photo p = new Photo(null, null, null);
 		fileChooser.setTitle("Open Resource File");
-		File file = fileChooser.showOpenDialog(null);
+		File file = null;
+		file = fileChooser.showOpenDialog(null);
+		if(file == null) {
+			return;
+		}
 		p.setURL(file.getAbsolutePath());
 		Image imageForFile = new Image("file:" + p.getURL());
+		//sets the clicked image view as this image
 		clickedImageView.setImage(imageForFile);
+		//get a calendar and set the date for the photo
 		Calendar c = Calendar.getInstance();
 		c.setTime(new Date(file.lastModified()));
 		c.set(Calendar.MILLISECOND, 0);
@@ -166,42 +164,51 @@ public class OpenAlbumController {
 			p.setCaption(result.get());
 		}
 
+		//add the photo to the obslist and to the user's metadata
 		obsList.add(p);
 		users.get(userIndex).getUserAlbums().get(albumIndex).addPhoto(p);
+		//set the user's album's number of photos
 		users.get(userIndex).getUserAlbums().get(albumIndex).setNumPhotos(obsList.size());
+		//update the obslist
 		listCellFactory();
 		
+		//select the image
 		listView.getSelectionModel().select(p);
 		disable(false);
 		
 		//get start/end date of album
+		setAlbumDates();	
+	}
+
+	public void setAlbumDates() {
+		if(obsList.size() == 0) {
+			users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange("*");
+			users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange("*");
+			return;
+		}
 		Calendar earliestPic = Calendar.getInstance();
 		Calendar latestPic = Calendar.getInstance();
+		
 		earliestPic.setTime(obsList.get(0).getDate().getTime());
 		latestPic.setTime(obsList.get(0).getDate().getTime());
-		if (obsList.size()==1) {
-			String date = date(earliestPic);
-			users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange(date);
-			users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange(date);
-		}
-		for (int i=0; i<obsList.size(); i++) {
-			if (obsList.get(i).getDate().getTime().compareTo(earliestPic.getTime())<0) {
+		for(int i = 0; i < obsList.size(); i++) {
+			if (obsList.get(i).getDate().getTime().compareTo(earliestPic.getTime())<=0) {
 				earliestPic.setTime(obsList.get(i).getDate().getTime());
 				String earliestDate = date(earliestPic);
 				users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange(earliestDate);
 			}
-			if (obsList.get(i).getDate().getTime().compareTo(latestPic.getTime())>0) {
+			if (obsList.get(i).getDate().getTime().compareTo(latestPic.getTime())>=0) {
 				latestPic.setTime(obsList.get(i).getDate().getTime());
 				String latestDate = date(latestPic);
 				users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange(latestDate);
-			}	
+			}
 		}
 	}
 	
 	public String date(Calendar c) {
-		int month = c.get(c.MONTH) + 1;
-		int day = c.get(c.DAY_OF_MONTH);
-		int year = c.get(c.YEAR);
+		int month = c.get(Calendar.MONTH) + 1;
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		int year = c.get(Calendar.YEAR);
 		return month + "-" + day + "-" + year;
 	}
 	
@@ -229,36 +236,7 @@ public class OpenAlbumController {
 		//update the list when a photo is deleted
 		listCellFactory();
 		
-		System.out.println(obsList);
-		Calendar earliestPic = Calendar.getInstance();
-		Calendar latestPic = Calendar.getInstance();
-		earliestPic.setTime(obsList.get(0).getDate().getTime());
-		latestPic.setTime(obsList.get(0).getDate().getTime());
-		if (obsList.size()==0) {
-			users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange(null);
-			users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange(null);
-		}
-		if (obsList.size()==1) {
-			String date = date(earliestPic);
-			users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange(date);
-			users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange(date);
-		}
-		for (int i=0; i<obsList.size(); i++) {
-			if (obsList.get(i).getDate().getTime().compareTo(earliestPic.getTime())<0) {
-				earliestPic.setTime(obsList.get(i).getDate().getTime());
-				String earliestDate = date(earliestPic);
-				users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange(earliestDate);
-			}
-			if (obsList.get(i).getDate().getTime().compareTo(latestPic.getTime())>0) {
-				latestPic.setTime(obsList.get(i).getDate().getTime());
-				String latestDate = date(latestPic);
-				users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange(latestDate);
-			}	
-			System.out.println("early: " + earliestPic.getTime());
-			System.out.println("late: " + latestPic.getTime());
-		}
-		
-		
+		setAlbumDates();
 	}
 	
 	//copy button
@@ -415,5 +393,6 @@ public class OpenAlbumController {
 	public static void writeApp(List<User> tagApp) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
 		oos.writeObject(tagApp);
+		oos.close();
 	} 
 }

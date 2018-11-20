@@ -62,7 +62,6 @@ public class LoginController implements Serializable{
 	//Login Button 
 	public void loginButton(ActionEvent event) throws Exception {
 		//go to album display scene 
-		//TODO: store username and user info somehow
 		//if username is admin
 		if (username.getText().equals("admin")) {
 			FXMLLoader loader = new FXMLLoader();

@@ -5,15 +5,15 @@ import java.io.Serializable;
 //class meant to represent a Tag object
 public class Tag implements Serializable {
 	
-	private String tagType;
+	private TagType tagType;
 	private String tagValue;
 	
-	public Tag(String tagType, String tagValue) {
+	public Tag(TagType tagType, String tagValue) {
 		this.tagType = tagType;
 		this.tagValue = tagValue;
 	}
 	
-	public String getTagType() {
+	public TagType getTagType() {
 		return tagType;
 	}
 	

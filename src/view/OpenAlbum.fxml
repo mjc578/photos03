@@ -72,7 +72,7 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Button>
-      <Label layoutX="470.0" layoutY="380.0" text="Data/Time:" />
+      <Label layoutX="470.0" layoutY="380.0" text="Date/Time:" />
       <Label fx:id="dateTime" layoutX="540.0" layoutY="380.0" prefHeight="17.0" prefWidth="342.0" />
       <Label layoutX="469.0" layoutY="410.0" text="Caption:" />
       <Label fx:id="caption" alignment="TOP_LEFT" layoutX="540.0" layoutY="410.0" prefHeight="17.0" prefWidth="342.0" />
