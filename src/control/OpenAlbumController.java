@@ -75,7 +75,19 @@ public class OpenAlbumController {
   		//set the obslist on the users list of photos in the album user clicked on and set the list view
   		obsList = FXCollections.observableArrayList(users.get(userIndex).getUserAlbums().get(albumIndex).getPhotos());
   		listView.setItems(obsList);
+  		
+  		if (users.get(userIndex).getUsername().equals("stock") && users.get(userIndex).getUserAlbums().get(albumIndex).getName().equals("stock") && obsList.size()==0) {
+  			Photo stock1 = new Photo("stock 1", null , "stockPhotos/binary.jpg");
+  			/*
+  			obsList.add(stock1);
+  			users.get(userIndex).getUserAlbums().get(albumIndex).addPhoto(stock1);
+  			users.get(userIndex).getUserAlbums().get(albumIndex).setNumPhotos(obsList.size());
+  			listCellFactory();
+  			*/
+  		}
+  		
   		listView.getSelectionModel().select(0);
+  		
   		if (obsList != null && !obsList.isEmpty()) {
 			showPhotoDetails();
 		}

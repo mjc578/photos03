@@ -66,6 +66,13 @@ public class AlbumDisplayController implements Serializable {
 		if (obsList.isEmpty() && obsList != null) {
 			disable();
 		}
+		
+		if(users.get(userIndex).getUsername().equals("stock") && obsList.size()==0) {
+			AlbumInfo stock = new AlbumInfo("stock", 0, "*", "*");
+			obsList.add(stock);
+			users.get(userIndex).getUserAlbums().add(stock);
+		}
+		
 		listView.getSelectionModel().select(0);
 	}
 	
