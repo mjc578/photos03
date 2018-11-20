@@ -179,31 +179,6 @@ public class OpenAlbumController {
 		//get start/end date of album
 		setAlbumDates();	
 	}
-
-	public void setAlbumDates() {
-		if(obsList.size() == 0) {
-			users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange("*");
-			users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange("*");
-			return;
-		}
-		Calendar earliestPic = Calendar.getInstance();
-		Calendar latestPic = Calendar.getInstance();
-		
-		earliestPic.setTime(obsList.get(0).getDate().getTime());
-		latestPic.setTime(obsList.get(0).getDate().getTime());
-		for(int i = 0; i < obsList.size(); i++) {
-			if (obsList.get(i).getDate().getTime().compareTo(earliestPic.getTime())<=0) {
-				earliestPic.setTime(obsList.get(i).getDate().getTime());
-				String earliestDate = date(earliestPic);
-				users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange(earliestDate);
-			}
-			if (obsList.get(i).getDate().getTime().compareTo(latestPic.getTime())>=0) {
-				latestPic.setTime(obsList.get(i).getDate().getTime());
-				String latestDate = date(latestPic);
-				users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange(latestDate);
-			}
-		}
-	}
 	
 	public String date(Calendar c) {
 		int month = c.get(Calendar.MONTH) + 1;
@@ -220,8 +195,14 @@ public class OpenAlbumController {
 		
 		Optional<ButtonType> result = alert.showAndWait();
 		if (result.get() == ButtonType.OK){
-		   int index = listView.getSelectionModel().getSelectedIndex();
-		   obsList.remove(index);
+		   delete();
+		}
+		
+	}
+	
+	public void delete() {
+		int index = listView.getSelectionModel().getSelectedIndex();
+		obsList.remove(index);
 		   users.get(userIndex).getUserAlbums().get(albumIndex).removePhoto(index); 
 		   users.get(userIndex).getUserAlbums().get(albumIndex).setNumPhotos(obsList.size());
 		   
@@ -232,11 +213,9 @@ public class OpenAlbumController {
 				clickedImageView.setImage(null);
 				tagsLabel.setText(null);
 			}
-		}
-		//update the list when a photo is deleted
-		listCellFactory();
-		
-		setAlbumDates();
+		   
+		   listCellFactory();
+		   setAlbumDates();
 	}
 	
 	//copy button
@@ -274,6 +253,8 @@ public class OpenAlbumController {
 			else{
 				users.get(userIndex).getUserAlbums().get(choiceIndex).addPhoto(listView.getSelectionModel().getSelectedItem());
 				users.get(userIndex).getUserAlbums().get(choiceIndex).setNumPhotos(users.get(userIndex).getUserAlbums().get(choiceIndex).getNumPhotos()+1);
+			
+				setAlbumDates2(choiceIndex);			
 			}
 		    
 		}
@@ -314,21 +295,10 @@ public class OpenAlbumController {
 			//add photo to selected album and delete from current album
 			else{
 				users.get(userIndex).getUserAlbums().get(choiceIndex).addPhoto(listView.getSelectionModel().getSelectedItem());
-				
-				int index = listView.getSelectionModel().getSelectedIndex();
-				obsList.remove(index);
-				users.get(userIndex).getUserAlbums().get(albumIndex).removePhoto(index); 
-				
 				users.get(userIndex).getUserAlbums().get(choiceIndex).setNumPhotos(users.get(userIndex).getUserAlbums().get(choiceIndex).getNumPhotos()+1);
-				users.get(userIndex).getUserAlbums().get(albumIndex).setNumPhotos(obsList.size());
+				delete();
 			
-				if (obsList.isEmpty() && obsList != null) {
-					disable(true);
-					dateTime.setText(null);
-					caption.setText(null);
-					clickedImageView.setImage(null);
-					tagsLabel.setText(null);
-				}
+				setAlbumDates2(choiceIndex);
 			}   
 		}
 	}
@@ -381,6 +351,53 @@ public class OpenAlbumController {
 		else { 
 			nextPhotoButton.setDisable(false);
 		}
+	}
+	
+	//sets album date range when adding/deleting photos
+	public void setAlbumDates() {
+		if(obsList.size() == 0) {
+			users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange("*");
+			users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange("*");
+			return;
+		}
+		Calendar earliestPic = Calendar.getInstance();
+		Calendar latestPic = Calendar.getInstance();
+		
+		earliestPic.setTime(obsList.get(0).getDate().getTime());
+		latestPic.setTime(obsList.get(0).getDate().getTime());
+		for(int i = 0; i < obsList.size(); i++) {
+			if (obsList.get(i).getDate().getTime().compareTo(earliestPic.getTime())<=0) {
+				earliestPic.setTime(obsList.get(i).getDate().getTime());
+				String earliestDate = date(earliestPic);
+				users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange(earliestDate);
+			}
+			if (obsList.get(i).getDate().getTime().compareTo(latestPic.getTime())>=0) {
+				latestPic.setTime(obsList.get(i).getDate().getTime());
+				String latestDate = date(latestPic);
+				users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange(latestDate);
+			}
+		}
+	}
+	
+	//sets album date range when copying/moving photos
+	public void setAlbumDates2(int choiceIndex) {
+		Calendar earliestPic = Calendar.getInstance();
+		Calendar latestPic = Calendar.getInstance();
+		earliestPic.setTime(users.get(userIndex).getUserAlbums().get(choiceIndex).getPhotos().get(0).getDate().getTime());
+		latestPic.setTime(users.get(userIndex).getUserAlbums().get(choiceIndex).getPhotos().get(0).getDate().getTime());
+		
+		for (int i = 0; i<users.get(userIndex).getUserAlbums().get(choiceIndex).getNumPhotos(); i++) {
+			if (users.get(userIndex).getUserAlbums().get(choiceIndex).getPhotos().get(i).getDate().getTime().compareTo(earliestPic.getTime())<=0) {
+				earliestPic.setTime(users.get(userIndex).getUserAlbums().get(choiceIndex).getPhotos().get(i).getDate().getTime());
+				String earliestDate = date(earliestPic);
+				users.get(userIndex).getUserAlbums().get(choiceIndex).setStartDateRange(earliestDate);
+			}
+			if (users.get(userIndex).getUserAlbums().get(choiceIndex).getPhotos().get(i).getDate().getTime().compareTo(latestPic.getTime())>=0) {
+				latestPic.setTime(users.get(userIndex).getUserAlbums().get(choiceIndex).getPhotos().get(i).getDate().getTime());
+				String latestDate = date(latestPic);
+				users.get(userIndex).getUserAlbums().get(choiceIndex).setEndDateRange(latestDate);
+			}
+		}	
 	}
 	
 	public void disable(boolean tf){
