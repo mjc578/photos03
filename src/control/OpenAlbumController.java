@@ -180,23 +180,29 @@ public class OpenAlbumController {
 		earliestPic.setTime(obsList.get(0).getDate().getTime());
 		latestPic.setTime(obsList.get(0).getDate().getTime());
 		if (obsList.size()==1) {
-			users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange(p.getDate().getTime());
-			users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange(p.getDate().getTime());
+			String date = date(earliestPic);
+			users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange(date);
+			users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange(date);
 		}
 		for (int i=0; i<obsList.size(); i++) {
 			if (obsList.get(i).getDate().getTime().compareTo(earliestPic.getTime())<0) {
 				earliestPic.setTime(obsList.get(i).getDate().getTime());
-				users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange(earliestPic.getTime());
+				String earliestDate = date(earliestPic);
+				users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange(earliestDate);
 			}
 			if (obsList.get(i).getDate().getTime().compareTo(latestPic.getTime())>0) {
 				latestPic.setTime(obsList.get(i).getDate().getTime());
-				users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange(latestPic.getTime());
+				String latestDate = date(latestPic);
+				users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange(latestDate);
 			}	
 		}
-		
-		
-		
-		
+	}
+	
+	public String date(Calendar c) {
+		int month = c.get(c.MONTH) + 1;
+		int day = c.get(c.DAY_OF_MONTH);
+		int year = c.get(c.YEAR);
+		return month + "-" + day + "-" + year;
 	}
 	
 	//delete button - deletes selected photo
@@ -222,6 +228,37 @@ public class OpenAlbumController {
 		}
 		//update the list when a photo is deleted
 		listCellFactory();
+		
+		System.out.println(obsList);
+		Calendar earliestPic = Calendar.getInstance();
+		Calendar latestPic = Calendar.getInstance();
+		earliestPic.setTime(obsList.get(0).getDate().getTime());
+		latestPic.setTime(obsList.get(0).getDate().getTime());
+		if (obsList.size()==0) {
+			users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange(null);
+			users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange(null);
+		}
+		if (obsList.size()==1) {
+			String date = date(earliestPic);
+			users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange(date);
+			users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange(date);
+		}
+		for (int i=0; i<obsList.size(); i++) {
+			if (obsList.get(i).getDate().getTime().compareTo(earliestPic.getTime())<0) {
+				earliestPic.setTime(obsList.get(i).getDate().getTime());
+				String earliestDate = date(earliestPic);
+				users.get(userIndex).getUserAlbums().get(albumIndex).setStartDateRange(earliestDate);
+			}
+			if (obsList.get(i).getDate().getTime().compareTo(latestPic.getTime())>0) {
+				latestPic.setTime(obsList.get(i).getDate().getTime());
+				String latestDate = date(latestPic);
+				users.get(userIndex).getUserAlbums().get(albumIndex).setEndDateRange(latestDate);
+			}	
+			System.out.println("early: " + earliestPic.getTime());
+			System.out.println("late: " + latestPic.getTime());
+		}
+		
+		
 	}
 	
 	//copy button

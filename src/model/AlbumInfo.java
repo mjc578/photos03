@@ -8,11 +8,11 @@ public class AlbumInfo implements Serializable{
 	
 	private String name;
 	private int numPhotos=0;
-	private Date startDateRange;
-	private Date endDateRange;
+	private String startDateRange;
+	private String endDateRange;
 	private ArrayList<Photo> photos;
 	
-	public AlbumInfo(String name, int numPhotos, Date startDateRange, Date endDateRange) {
+	public AlbumInfo(String name, int numPhotos, String startDateRange, String endDateRange) {
 		this.name = name;
 		this.numPhotos = numPhotos;
 		this.startDateRange = startDateRange;
@@ -32,16 +32,16 @@ public class AlbumInfo implements Serializable{
 	public void setNumPhotos(int numPhotos) {
 		this.numPhotos = numPhotos;
 	}
-	public Date getStartDateRange() {
+	public String getStartDateRange() {
 		return startDateRange;
 	}
-	public void setStartDateRange(Date startDateRange) {
+	public void setStartDateRange(String startDateRange) {
 		this.startDateRange = startDateRange;
 	}
-	public Date getEndDateRange() {
+	public String getEndDateRange() {
 		return endDateRange;
 	}
-	public void setEndDateRange(Date endDateRange) {
+	public void setEndDateRange(String endDateRange) {
 		this.endDateRange = endDateRange;
 	}
 	
