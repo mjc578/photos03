@@ -179,6 +179,7 @@ public class AlbumDisplayController implements Serializable {
 		}
 		if (tagRadioButton.isSelected()) {
 			String args[] = searchBar.getText().split(" ");
+
 			if(args.length == 3) {
 				if (!args[1].equals("AND") && !args[1].equals("OR")) {
 					errorMessage();
