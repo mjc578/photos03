@@ -44,6 +44,7 @@ public class SearchController {
 	@FXML private Label caption;
 	@FXML private Label tags;
 	@FXML private Label searchRes;
+	@FXML private ImageView clickedImageView;
 	
 	private ObservableList<Photo> obsList;
 	
@@ -58,7 +59,8 @@ public class SearchController {
 		userIndex = index;
 		searchQuery = query;
 		
-		searchRes.setDisable(true);
+		searchRes.setVisible(false);
+		tags.setWrapText(true);
 		
 		obsList = FXCollections.observableArrayList();
 		//process the query based on what type it happens to be
@@ -74,11 +76,37 @@ public class SearchController {
 		if(obsList.size() != 0) {
 			listView.setItems(obsList);
 			listCellFactory();
+			listView.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+	        	if(newVal != null) {
+	        		showPhotoDetails();
+	        	}
+	        });
+			listView.getSelectionModel().select(0);
 		}
 		//There are no search results, disable the list view and show text that says no search results, PANIC!
 		else {
 			disableStuff(true);
-			searchRes.setDisable(false);
+			searchRes.setVisible(true);
+		}
+	}
+	
+	public void showPhotoDetails(){
+		dateTime.setText(listView.getSelectionModel().getSelectedItem().getDate().getTime().toString());
+		caption.setText(listView.getSelectionModel().getSelectedItem().getCaption());
+		clickedImageView.setImage(new Image("file:" + listView.getSelectionModel().getSelectedItem().getURL()));
+		tags.setText(listView.getSelectionModel().getSelectedItem().displayTags());
+		
+		if (listView.getSelectionModel().getSelectedIndex() == 0) {
+			previousPhotoButton.setDisable(true);
+		}
+		else { 
+			previousPhotoButton.setDisable(false);
+		}
+		if (listView.getSelectionModel().getSelectedIndex() == obsList.size() - 1) {
+			nextPhotoButton.setDisable(true);
+		}
+		else { 
+			nextPhotoButton.setDisable(false);
 		}
 	}
 	
@@ -158,7 +186,6 @@ public class SearchController {
 		
 		//if the tag search by is the same type for both tags, check that it is multi valued, if not, return
 		if(!t1.getTagType().isMultiValued() && t1.getTagType().equals(t2.getTagType())) {
-			//TODO: show that the user entered a bad input and to redo, maybe do it in previous screen
 			return;
 		}
 		
@@ -214,7 +241,7 @@ public class SearchController {
 	}
 
 	private void searchByDate() {
-		//split the query up by spaces, should be of XX/XX/XXXX TO XX/XX/XXXX
+		//split the query up by spaces, should be of XX-XX-XXXX TO XX-XX-XXXX
 		String args[] = searchQuery.split(" ");
 		
 		//bad input
@@ -222,8 +249,8 @@ public class SearchController {
 			return;
 		}
 		
-		String startArgs[] = args[0].split("/");
-		String endArgs[] = args[2].split("/");
+		String startArgs[] = args[0].split("-");
+		String endArgs[] = args[2].split("-");
 		
 		Calendar start = Calendar.getInstance();
 		Calendar end = Calendar.getInstance();
@@ -239,7 +266,7 @@ public class SearchController {
 			for(int j = 0; j < albums.get(i).getNumPhotos(); j++) {
 				Photo p = albums.get(i).getPhotos().get(j);
 				//check if the current photo is within the start and end date range
-				if(p.getDate().compareTo(start) >= 0 && p.getDate().compareTo(end) <= 0) {
+				if(p.getDate().compareTo(start) >= 0 && p.getDate().compareTo(end) <= 0 && !obsList.contains(p)) {
 					obsList.add(p);
 				}
 			}
@@ -312,7 +339,25 @@ public class SearchController {
 					}
 				}
 				//ok so if there were no duplicates create a new album to populate
-				AlbumInfo newlyMadeAlbum = new AlbumInfo(result.get(), 0, null, null);
+				//but first get the dates
+				Calendar earliestPic = Calendar.getInstance();
+				Calendar latestPic = Calendar.getInstance();
+				String earliestDate = "*";
+				String latestDate = "*";
+				
+				earliestPic.setTime(obsList.get(0).getDate().getTime());
+				latestPic.setTime(obsList.get(0).getDate().getTime());
+				for(int i = 0; i < obsList.size(); i++) {
+					if (obsList.get(i).getDate().getTime().compareTo(earliestPic.getTime())<=0) {
+						earliestPic.setTime(obsList.get(i).getDate().getTime());
+						earliestDate = date(earliestPic);
+					}
+					if (obsList.get(i).getDate().getTime().compareTo(latestPic.getTime())>=0) {
+						latestPic.setTime(obsList.get(i).getDate().getTime());
+						latestDate = date(latestPic);
+					}
+				}
+				AlbumInfo newlyMadeAlbum = new AlbumInfo(result.get(), obsList.size(), earliestDate, latestDate);
 				//...and then populate it bang bang
 				for(Photo p : obsList) {
 					newlyMadeAlbum.addPhoto(p);
@@ -321,6 +366,13 @@ public class SearchController {
 				users.get(userIndex).addToAlbums(newlyMadeAlbum);
 			}
 		}
+	}
+	
+	public String date(Calendar c) {
+		int month = c.get(Calendar.MONTH) + 1;
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		int year = c.get(Calendar.YEAR);
+		return month + "-" + day + "-" + year;
 	}
 	
 	//Next Photo Button
