@@ -72,6 +72,8 @@ public class OpenAlbumController {
   		//initialize the file chooser
   		fileChooser = new FileChooser();
   		
+  		tagsLabel.setWrapText(true);
+  		
   		//set the obslist on the users list of photos in the album user clicked on and set the list view
   		obsList = FXCollections.observableArrayList(users.get(userIndex).getUserAlbums().get(albumIndex).getPhotos());
   		listView.setItems(obsList);
@@ -247,13 +249,14 @@ public class OpenAlbumController {
 		
 		int choiceIndex = -1;
 		Optional<String> result = dialog.showAndWait();
-		for (int i=0; i<choices.size(); i++) {
-			if (result.get().equals(choices.get(i))) {
-				choiceIndex = i;
-			}
-		}
+	
 		//if okay is clicked
 		if (result.isPresent()){
+			for (int i=0; i<choices.size(); i++) {
+				if (result.get().equals(choices.get(i))) {
+					choiceIndex = i;
+				}
+			}
 			//check if selected album is current album, else give an error.
 			if (users.get(userIndex).getUserAlbums().get(albumIndex).getName().equals(result.get())) {
 				Alert alert = new Alert(AlertType.ERROR);
@@ -290,13 +293,13 @@ public class OpenAlbumController {
 		
 		int choiceIndex = -1;
 		Optional<String> result = dialog.showAndWait();
-		for (int i=0; i<choices.size(); i++) {
-			if (result.get().equals(choices.get(i))) {
-				choiceIndex = i;
-			}
-		}
 		//if okay is clicked
 		if (result.isPresent()){
+			for (int i=0; i<choices.size(); i++) {
+				if (result.get().equals(choices.get(i))) {
+					choiceIndex = i;
+				}
+			}
 			//check if selected album is current album, else give an error.
 			if (users.get(userIndex).getUserAlbums().get(albumIndex).getName().equals(result.get())) {
 				Alert alert = new Alert(AlertType.ERROR);

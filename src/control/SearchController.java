@@ -124,9 +124,12 @@ public class SearchController {
 			if(args[1].equals("AND")) {
 				andTagSearch(args);
 			}
-			//ptherwise OR
-			else {
+			//otherwise OR
+			else if (args[1].equals("OR")) {
 				orTagSearch(args);
+			}
+			else {
+				errorMessage();
 			}
 		}
 	}

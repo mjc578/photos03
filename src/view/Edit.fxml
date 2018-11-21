@@ -43,7 +43,7 @@
             <Label prefHeight="17.0" prefWidth="151.0" />
          </items>
       </ToolBar>
-      <ImageView fitHeight="302.0" fitWidth="416.0" layoutX="469.0" layoutY="13.0" pickOnBounds="true" />
+      <ImageView fx:id="clickedImageView" fitHeight="302.0" fitWidth="416.0" layoutX="469.0" layoutY="13.0" pickOnBounds="true" />
       <Button fx:id="previousPhotoButton" layoutX="597.0" layoutY="326.0" mnemonicParsing="false" prefHeight="39.0" prefWidth="68.0" text="&lt;">
          <font>
             <Font name="System Bold" size="18.0" />
@@ -54,10 +54,10 @@
             <Font name="System Bold" size="18.0" />
          </font>
       </Button>
-      <Label layoutX="470.0" layoutY="380.0" text="Data/Time:" />
-      <Label layoutX="540.0" layoutY="380.0" prefHeight="17.0" prefWidth="342.0" />
+      <Label fx:id="dateLabel" layoutX="470.0" layoutY="380.0" text="Date/Time:" />
+      <Label fx:id="dateLabel" layoutX="540.0" layoutY="380.0" prefHeight="17.0" prefWidth="342.0" />
       <Label layoutX="469.0" layoutY="410.0" text="Caption:" />
-      <Label alignment="TOP_LEFT" layoutX="540.0" layoutY="418.0" prefHeight="17.0" prefWidth="342.0" />
+      <Label fx:id="captionLabel" alignment="TOP_LEFT" layoutX="540.0" layoutY="418.0" prefHeight="17.0" prefWidth="342.0" />
       <Label layoutX="469.0" layoutY="440.0" text="Tags:" />
       <Label layoutX="17.0" layoutY="76.0" text="Caption:">
          <font>
@@ -74,6 +74,6 @@
       <Button fx:id="addTagButton" layoutX="320.0" layoutY="270.0" mnemonicParsing="false" onAction="#addTagButton" prefHeight="35.0" prefWidth="95.0" text="Add Tag" />
       <Button fx:id="deleteTagButton" layoutX="320.0" layoutY="350.0" mnemonicParsing="false" onAction="#deleteTagButton" prefHeight="35.0" prefWidth="95.0" text="Delete Tag" />
       <Button fx:id="addTagTypeButton" layoutX="320.0" layoutY="430.0" mnemonicParsing="false" onAction="#addTagTypeButton" prefHeight="35.0" prefWidth="95.0" text="Add Tag-Type" />
-      <Label id="tagsLabel" alignment="TOP_LEFT" layoutX="528.0" layoutY="448.0" prefHeight="76.0" prefWidth="342.0" />
+      <Label id="tagsLabel" fx:id="tagsLabel" alignment="TOP_LEFT" layoutX="528.0" layoutY="448.0" prefHeight="76.0" prefWidth="342.0" />
    </children>
 </AnchorPane>

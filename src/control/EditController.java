@@ -19,9 +19,12 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ChoiceDialog;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.stage.Stage;
 import model.AlbumInfo;
 import model.Photo;
@@ -35,6 +38,10 @@ public class EditController implements Serializable {
 	@FXML private Button addTagButton;
 	@FXML private Button addTagTypeButton;
 	@FXML private TextArea editCaption;
+	@FXML private Label dateLabel;
+	@FXML private Label captionLabel;
+	@FXML private Label tagsLabel;
+	@FXML private ImageView clickedImageView;
 	@FXML private Button confirmButton;
 	@FXML private Button cancelButton;
 	@FXML private Button nextPhotoButton;
@@ -66,12 +73,28 @@ public class EditController implements Serializable {
 		albumIndex = index2;
 		photoIndex = index3;
 		
+		tagsLabel.setWrapText(true);
+		
 		p = users.get(userIndex).getUserAlbums().get(albumIndex).getPhotos().get(photoIndex);
 		
 		obsList = FXCollections.observableArrayList(p.getTags());
 		//sets the edit caption text with the caption of the photo that was clicked
 		editCaption.setText(p.getCaption());
 		editTagListView.setItems(obsList);
+		editTagListView.getSelectionModel().select(0);
+		
+		if (obsList!=null && obsList.isEmpty()) {
+			deleteTagButton.setDisable(true);
+		}
+		
+		nextPhotoButton.setDisable(true);
+		previousPhotoButton.setDisable(true);
+		
+		dateLabel.setText(users.get(userIndex).getUserAlbums().get(albumIndex).getPhotos().get(photoIndex).getDate().getTime().toString());
+		captionLabel.setText(users.get(userIndex).getUserAlbums().get(albumIndex).getPhotos().get(photoIndex).getCaption());
+		tagsLabel.setText(users.get(userIndex).getUserAlbums().get(albumIndex).getPhotos().get(photoIndex).displayTags());
+		clickedImageView.setImage(new Image("file:" + users.get(userIndex).getUserAlbums().get(albumIndex).getPhotos().get(photoIndex).getURL()));
+		
 	} 
 	
 	//delete button
@@ -84,6 +107,10 @@ public class EditController implements Serializable {
 		if (result.get() == ButtonType.OK){
 			//delete from obslist
 		    obsList.remove(editTagListView.getSelectionModel().getSelectedItem());
+		    
+		    if (obsList!=null && obsList.isEmpty()) {
+				deleteTagButton.setDisable(true);
+			}
 		}
 	}
 	
@@ -137,6 +164,9 @@ public class EditController implements Serializable {
 					}
 					//ifthe tag is a new tag, add it to obs list
 					obsList.add(t);
+					
+					editTagListView.getSelectionModel().select(t);
+					deleteTagButton.setDisable(false);
 				}
 			}
 		}
