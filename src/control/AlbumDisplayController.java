@@ -98,6 +98,17 @@ public class AlbumDisplayController implements Serializable {
 				searchBar.setPromptText("Format: MM-DD-YYYY to MM-DD-YYYY");
 			}
 		});
+		
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+		    public void run() {
+		        try {
+					writeApp(users);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    }
+		}));
 
 	}
 	

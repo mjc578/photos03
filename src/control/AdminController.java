@@ -47,6 +47,17 @@ public class AdminController implements Serializable {
 		System.out.println(users);
 		
 		usersList.getSelectionModel().select(0);
+		
+		Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+		    public void run() {
+		        try {
+					writeApp(users);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    }
+		}));
 	}
 	
 	//goes back to login screen
@@ -118,6 +129,11 @@ public class AdminController implements Serializable {
 		alert.setContentText("Please try again.");
 		alert.showAndWait();
 	}
+	
+
+	
+	
+	
 	
 	public static final String storeDir = "docs";
 	public static final String storeFile = "users.ser"; 

@@ -101,6 +101,16 @@ public class OpenAlbumController {
         
         listCellFactory();
         
+        Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+		    public void run() {
+		        try {
+					writeApp(users);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+		    }
+		}));
   	}
   	
 	public void listCellFactory() {
