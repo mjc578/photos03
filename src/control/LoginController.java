@@ -34,9 +34,18 @@ public class LoginController implements Serializable{
 	@FXML private Button loginButton;
 	@FXML private TextField username;
 	
+	/**
+	 * User field for user
+	 * List field for list of users
+	 */
 	private User user;
 	private List<User> users;
 	
+	/**
+	 * Method to initialize the scene
+	 * @throws ClassNotFoundException
+	 * @throws IOException
+	 */
 	//first thing that happens when scene is loaded
 	public void initialize() throws ClassNotFoundException, IOException {
 		
@@ -59,6 +68,11 @@ public class LoginController implements Serializable{
 		});
 	}
 
+	/**
+	 * Method to load album display scene or admin scene
+	 * @param event
+	 * @throws Exception
+	 */
 	//Login Button 
 	public void loginButton(ActionEvent event) throws Exception {
 		//go to album display scene 
@@ -107,6 +121,9 @@ public class LoginController implements Serializable{
 		}
 	}
 	
+	/**
+	 * Method to send an error message in a pop up alert box if user does not exit
+	 */
 	public void errorMessage() {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");
@@ -115,9 +132,19 @@ public class LoginController implements Serializable{
 		alert.showAndWait();
 	}
 	
+	/**
+	 * String field to store directory
+	 * String field to store file
+	*/
 	public static final String storeDir = "docs";
 	public static final String storeFile = "users.ser"; 
 	
+	/**
+	 * Method to serialize and read users from file
+	 * @return ArrayList of users
+	 * @throws IOException
+	 * @throws ClassNotFoundException
+	 */
 	public static ArrayList<User> readApp() throws IOException, ClassNotFoundException {
 		
 		BufferedReader br = new BufferedReader(new FileReader("docs/users.ser"));     

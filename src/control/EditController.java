@@ -48,25 +48,35 @@ public class EditController implements Serializable {
 	@FXML private Button previousPhotoButton;
 	@FXML private ListView<Tag> editTagListView;
 	
-	public static final String storeDir = "docs";
-	public static final String storeFile = "users.ser"; 
-	
+
+	/**
+	 * String field for caption of photo
+	 * Observable List of tags of photo
+	 * List of users
+	 * int field of index of user that is logged in
+	 * int field of index of album that is selected
+	 * int field of index of photo that is selected
+	 * Photo field of photo that is selected
+	 */
 	//all the stuff user can edit and may want to save
-	
 	//the text of the caption previously there
 	private String caption;
 	//the edit tag list
 	private ObservableList<Tag> obsList;
-	
 	private List<User> users;
 	private int userIndex;
 	private int albumIndex;
 	private int photoIndex;
-	
 	//will have a temporary photo representing the current photo since the user can cancel all changes at any time
 	private Photo p;
 	
-	
+	/**
+	 * Method to get list of user, index of user that is logged in, index of album selected, and index of photo selected
+	 * @param user List of users
+	 * @param index Index of user that is logged in
+	 * @param index2 Index of album that is selected
+	 * @param index3 Index of photo that is selected
+	 */
 	public void initData(List<User> user, int index, int index2, int index3) {
 		users = user;
 		userIndex = index;
@@ -97,6 +107,10 @@ public class EditController implements Serializable {
 		
 	} 
 	
+	/**
+	 * Method to delete a tag of a photo
+	 * @param event Delete button is pressed
+	 */
 	//delete button
 	public void deleteTagButton(ActionEvent event) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -114,6 +128,10 @@ public class EditController implements Serializable {
 		}
 	}
 	
+	/**
+	 * Method to add tag to list of tags of a photo
+	 * @param event Add tag button is pressed
+	 */
 	//add tag button
 	public void addTagButton(ActionEvent event) {		
 		//Choice Dialog to choose out of existing tag types
@@ -172,6 +190,11 @@ public class EditController implements Serializable {
 		}
 	}
 	
+	/**
+	 * Method to add a tag type
+	 * @param event Add tag type button is pressed
+	 * @throws IOException
+	 */
 	//add tag-type button
 	public void addTagTypeButton(ActionEvent event) throws IOException {
 		TextInputDialog dialog = new TextInputDialog();
@@ -225,6 +248,11 @@ public class EditController implements Serializable {
 		}
 	}
 	
+	/**
+	 * Method to confirm all the changes made to caption and tags
+	 * @param event Confirm button is pressed
+	 * @throws IOException
+	 */
 	//confirm button to confirm edited caption, tags, and tag-types
 	public void confirmButton(ActionEvent event) throws IOException {
 		
@@ -252,6 +280,11 @@ public class EditController implements Serializable {
 		window.show();
 	}
 	
+	/**
+	 * Method to cancel all the changes made to caption and tags
+	 * @param event Cancel button is pressed
+	 * @throws Exception
+	 */
 	//cancel button to cancel edited caption, tags, and tag-types
 	//go back to open album scene
 	public void cancelButton(ActionEvent event) throws Exception {
@@ -268,6 +301,9 @@ public class EditController implements Serializable {
 		window.show();
 	}
 	
+	/**
+	 * Method to send an error message in a pop up alert box if user input in invalid
+	 */
 	//error alert for invalid inputs
 	public void errorMessage() {
 		Alert alert = new Alert(AlertType.ERROR);
@@ -277,6 +313,9 @@ public class EditController implements Serializable {
 		alert.showAndWait();
 	}
 	
+	/**
+	 * Method to send an error message in a pop up alert box if input is a duplicate
+	 */
 	//error alert for invalid inputs
 	public void errorMessageDup() {
 		Alert alert = new Alert(AlertType.ERROR);
@@ -286,6 +325,18 @@ public class EditController implements Serializable {
 		alert.showAndWait();
 	}
 	
+	/**
+	 * String field to store directory
+	 * String field to store file
+	 */
+	public static final String storeDir = "docs";
+	public static final String storeFile = "users.ser"; 
+	
+	/**
+	 * Method to serialize and write users to file
+	 * @param usersList List of users
+	 * @throws IOException
+	 */
 	public static void writeApp(List<User> usersList) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
 		oos.writeObject(usersList);

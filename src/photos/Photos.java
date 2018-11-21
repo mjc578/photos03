@@ -9,6 +9,10 @@ import javafx.scene.Parent;
 
 public class Photos extends Application {
 	//sets first stage to login scene
+	
+	/**
+	 * Method to load the login scene
+	 */
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -21,7 +25,11 @@ public class Photos extends Application {
 			e.printStackTrace();
 		}
 	}
-		
+	
+	/**
+	 * main method
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		launch(args);
 

@@ -52,15 +52,25 @@ public class OpenAlbumController {
 	@FXML private ImageView clickedImageView;
 	@FXML private ListView<Photo> listView;
 	
+	/**
+	 * Observable List of photos in selected album
+	 * List of users 
+	 * int field of index of album selected
+	 * int field of index of user that is logged in 
+	 * FileChooser field to choose a file when photo is being added
+	 */
 	private ObservableList<Photo> obsList;
     private List<User> users;
     private int albumIndex;
     private int userIndex;
     FileChooser fileChooser;
     
-    public static final String storeDir = "docs";
-	public static final String storeFile = "users.ser"; 
-    
+    /**
+     * Method to get list of users, index of use logged in, and index of album selected
+     * @param user List of users
+     * @param index Index of user that is logged in 
+     * @param index2 Index of album selected
+     */
   //gets selected album and user from albumDisplayController
   	public void initData(List<User> user, int index, int index2) {
   		//sets the users list, the index of user we need, and the index of album we need
@@ -106,6 +116,9 @@ public class OpenAlbumController {
 		}));
   	}
   	
+  	/**
+  	 * Method to display images in the listView
+  	 */
 	public void listCellFactory() {
 		listView.setCellFactory(param -> new ListCell<Photo>() {
             @Override
@@ -131,6 +144,11 @@ public class OpenAlbumController {
 
 	}
 	
+	/**
+	 * Method to load album display scene
+	 * @param event Back button is pressed
+	 * @throws Exception
+	 */
 	//back button takes you back to Album Display scene
 	public void backButton(ActionEvent event) throws Exception{
 		writeApp(users);
@@ -148,6 +166,11 @@ public class OpenAlbumController {
 		window.show();
 	}
 	
+	/**
+	 * Method to add photo to list of photos
+	 * @param event Add button is pressed
+	 * @throws MalformedURLException
+	 */
 	//add photo button
 	public void addButton(ActionEvent event) throws MalformedURLException{
 		//get the photo from the file chooser
@@ -195,6 +218,11 @@ public class OpenAlbumController {
 		setAlbumDates();	
 	}
 	
+	/**
+	 * Method to convert Calendar date into a string
+	 * @param c Date of photo
+	 * @return String format of the date
+	 */
 	public String date(Calendar c) {
 		int month = c.get(Calendar.MONTH) + 1;
 		int day = c.get(Calendar.DAY_OF_MONTH);
@@ -202,6 +230,10 @@ public class OpenAlbumController {
 		return month + "-" + day + "-" + year;
 	}
 	
+	/**
+	 * Method to delete selected photo from list of photos
+	 * @param event Delete button is pressed
+	 */
 	//delete button - deletes selected photo
 	public void deleteButton(ActionEvent event){
 		Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -212,9 +244,11 @@ public class OpenAlbumController {
 		if (result.get() == ButtonType.OK){
 		   delete();
 		}
-		
 	}
 	
+	/**
+	 * Method to delete selected photo
+	 */
 	public void delete() {
 		int index = listView.getSelectionModel().getSelectedIndex();
 		obsList.remove(index);
@@ -233,6 +267,10 @@ public class OpenAlbumController {
 		   setAlbumDates();
 	}
 	
+	/**
+	 * Method to copy photo from one album to another
+	 * @param event Copy button is pressed
+	 */
 	//copy button
 	public void copyButton(ActionEvent event){
 		//list of choices (albums)
@@ -274,10 +312,12 @@ public class OpenAlbumController {
 			}
 		    
 		}
-		else {
-		}
 	}
 	
+	/**
+	 * Method to move one photo from one album to another
+	 * @param event Move button is pressed
+	 */
 	//move button
 	public void moveButton(ActionEvent event){
 		List<String> choices = new ArrayList<>();
@@ -319,18 +359,31 @@ public class OpenAlbumController {
 		}
 	}
 	
+	/**
+	 * Method to go to the photo previous to the selected photo in the photo list
+	 * @param event < button is pressed
+	 */
 	// "<" button
 	public void previousPhotoButton(ActionEvent event){
 		int index = listView.getSelectionModel().getSelectedIndex() - 1;
 		listView.getSelectionModel().select(index);
 	}
 	
+	/**
+	 * Method to go to the photo after to the selected photo in the photo list
+	 * @param event > button is pressed
+	 */
 	// ">" button
 	public void nextPhotoButton(ActionEvent event){
 		int index = listView.getSelectionModel().getSelectedIndex() + 1;
 		listView.getSelectionModel().select(index);
 	}
 	
+	/**
+	 * Method to go to edit scene
+	 * @param event Edit button is pressed
+	 * @throws Exception
+	 */
 	// edit button - takes you to edit scene
 	// edit scene allows you to edit caption, add tags, add tag-types, and delete tags
 	public void editButton(ActionEvent event) throws Exception{
@@ -349,6 +402,9 @@ public class OpenAlbumController {
 		window.show();
 	}
 	
+	/**
+	 * Method to set caption, date/time, tags labels and image view to the selected photo
+	 */
 	public void showPhotoDetails(){
 		dateTime.setText(listView.getSelectionModel().getSelectedItem().getDate().getTime().toString());
 		caption.setText(listView.getSelectionModel().getSelectedItem().getCaption());
@@ -369,6 +425,9 @@ public class OpenAlbumController {
 		}
 	}
 	
+	/**
+	 * Method to set the start and end date range of selected album
+	 */
 	//sets album date range when adding/deleting photos
 	public void setAlbumDates() {
 		if(obsList.size() == 0) {
@@ -395,6 +454,10 @@ public class OpenAlbumController {
 		}
 	}
 	
+	/**
+	 * Method to set the start and end date range of album that photo is being moved/copied to
+	 * @param choiceIndex Index of album that photo is being moved/copied to
+	 */
 	//sets album date range when copying/moving photos
 	public void setAlbumDates2(int choiceIndex) {
 		Calendar earliestPic = Calendar.getInstance();
@@ -416,6 +479,10 @@ public class OpenAlbumController {
 		}	
 	}
 	
+	/**
+	 * Method to disable/able buttons when list of photos in empty
+	 * @param tf True to disable button, false to able buttons
+	 */
 	public void disable(boolean tf){
 		editButton.setDisable(tf);
 		deleteButton.setDisable(tf);
@@ -423,6 +490,18 @@ public class OpenAlbumController {
 		moveButton.setDisable(tf);	
 	}
 	
+	/**
+	 * String field to store directory
+	 * String field to store file
+	 */
+	public static final String storeDir = "docs";
+	public static final String storeFile = "users.ser"; 
+	
+	/**
+	 * Method to serialize and write users to file
+	 * @param tagApp List of users
+	 * @throws IOException
+	 */
 	public static void writeApp(List<User> tagApp) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
 		oos.writeObject(tagApp);

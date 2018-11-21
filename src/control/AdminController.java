@@ -32,9 +32,18 @@ public class AdminController implements Serializable {
 	@FXML private Button addButton;
 	@FXML private Button deleteButton;
 	@FXML private ListView<User> usersList;
+	
+	/**
+	 * ObservableList field of users
+	 * List field of users
+	 */
 	private ObservableList<User> obsList;
 	private List<User> users;
 	
+	/**
+	 * Method to get users from loginController
+	 * @param user List of users
+	 */
 	//gets list of users from loginController
 	public void initData(List<User> user) {
 		users = user;
@@ -60,6 +69,11 @@ public class AdminController implements Serializable {
 		}));
 	}
 	
+	/**
+	 * Method to logout of admin
+	 * @param event Logout button is pressed
+	 * @throws Exception
+	 */
 	//goes back to login screen
 	public void logOutButton(ActionEvent event) throws Exception {
 		writeApp(users);
@@ -74,6 +88,10 @@ public class AdminController implements Serializable {
 		window.show();
 	}
 	
+	/**
+	 * Method to add user to list of users
+	 * @param event Add button is pressed
+	 */
 	//create new users
 	public void addButton(ActionEvent event){
 		TextInputDialog dialog = new TextInputDialog();
@@ -106,6 +124,10 @@ public class AdminController implements Serializable {
 		}
 	}
 	
+	/**
+	 * Method to delete user from list of users
+	 * @param event Delete button is pressed
+	 */
 	public void deleteButton(ActionEvent event){
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Delete Album");
@@ -122,6 +144,9 @@ public class AdminController implements Serializable {
 		} 
 	}
 	
+	/**
+	 * Method to send an error message in a pop up alert box if user input is invalid
+	 */
 	public void errorMessage() {
 		Alert alert = new Alert(AlertType.ERROR);
 		alert.setTitle("Error");
@@ -130,14 +155,18 @@ public class AdminController implements Serializable {
 		alert.showAndWait();
 	}
 	
-
-	
-	
-	
-	
+	/**
+	 * String field to store directory
+	 * String field to store file
+	 */
 	public static final String storeDir = "docs";
 	public static final String storeFile = "users.ser"; 
 	
+	/**
+	 * Method to serialize and write users to file
+	 * @param users List of users
+	 * @throws IOException
+	 */
 	public static void writeApp(List<User> users) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
 		oos.writeObject(users);

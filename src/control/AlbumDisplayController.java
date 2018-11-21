@@ -57,12 +57,22 @@ public class AlbumDisplayController implements Serializable {
 	//group for the radio buttons
 	final ToggleGroup group = new ToggleGroup();
 	
+	/**
+	 * AlbumInfo field for album
+	 * Observable list of albums
+	 * List of users
+	 * int field for index of user that logged in
+	 */
 	private AlbumInfo albumInfo;
 	private ObservableList<AlbumInfo> obsList;
-	
 	private List<User> users;
 	private int userIndex;
 	
+	/**
+	 * Method to get list of users and index of user that is logged in
+	 * @param user List of users
+	 * @param index Index of user that is logged in
+	 */
 	//gets selected user from loginController
 	public void initData(List<User> user, int index) {
 		//initialize the list of users and what user we are logged into
@@ -113,14 +123,13 @@ public class AlbumDisplayController implements Serializable {
 				}
 		    }
 		}));
-
-	}
-	
-	//first thing that happens when scene is loaded (must extend Application in class)
-	public void initialize() throws ClassNotFoundException, IOException {
 	}
 
-	//log out button takes you back to login scene
+	/**
+	 * Method to load login scene
+	 * @param event Logout Button is pressed
+	 * @throws Exception
+	 */
 	public void logOutButton(ActionEvent event) throws Exception {
 		writeApp(users);
 		Parent root = FXMLLoader.load(getClass().getResource("/view/Login.fxml"));
@@ -131,8 +140,11 @@ public class AlbumDisplayController implements Serializable {
 		window.show();
 	}
 	
-	//open album button
-	//open album button to go to open album scene
+	/**
+	 * Method to load open album scene
+	 * @param event Open Album Button is pressed
+	 * @throws Exception
+	 */
 	public void openAlbumButton(ActionEvent event) throws Exception{
 		writeApp(users);
 		
@@ -149,8 +161,11 @@ public class AlbumDisplayController implements Serializable {
 		window.show();
 	}
 	
-	//search button
-	//go to search scene if there is user input in search bar
+	/**
+	 * Method to load search scene
+	 * @param event
+	 * @throws Exception
+	 */
 	public void searchButton(ActionEvent event) throws Exception {
 		//checks if there is text in search bar
 		//alert dialogue if no user input was entered
@@ -159,33 +174,63 @@ public class AlbumDisplayController implements Serializable {
 			errorMessage();
 			return;
 		}
-		if (tagRadioButton.isSelected() && dateRadioButton.isSelected()) {
-			errorMessage();
-		}
 		if (!tagRadioButton.isSelected() && !dateRadioButton.isSelected()) {
 			errorMessage();
 		}
-		//go to search scene
-		else {
-			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(getClass().getResource("/view/Search.fxml"));
-			Parent root = loader.load();
-			SearchController controller = loader.getController();
-			if(tagRadioButton.isSelected()) {
-				controller.initData(users, userIndex, searchBar.getText(), "tagQuery");
+		if (tagRadioButton.isSelected()) {
+			String args[] = searchBar.getText().split(" ");
+			if(args.length == 3) {
+				if (!args[1].equals("AND") && !args[1].equals("OR")) {
+					errorMessage();
+				}	
+				else {
+					FXMLLoader loader = new FXMLLoader();
+					loader.setLocation(getClass().getResource("/view/Search.fxml"));
+					Parent root = loader.load();
+					SearchController controller = loader.getController();
+					if(tagRadioButton.isSelected()) {
+						controller.initData(users, userIndex, searchBar.getText(), "tagQuery");
+					}
+					else {
+						controller.initData(users, userIndex, searchBar.getText(), "dateQuery");
+					}
+					Scene searchScene = new Scene(root);
+					Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
+					window.setScene(searchScene);
+					window.setTitle("Search");
+					window.show();
+					
+				}
+			}
+			else if (args.length>1) {
+				errorMessage();
 			}
 			else {
-				controller.initData(users, userIndex, searchBar.getText(), "dateQuery");
+				FXMLLoader loader = new FXMLLoader();
+				loader.setLocation(getClass().getResource("/view/Search.fxml"));
+				Parent root = loader.load();
+				SearchController controller = loader.getController();
+				if(tagRadioButton.isSelected()) {
+					controller.initData(users, userIndex, searchBar.getText(), "tagQuery");
+				}
+				else {
+					controller.initData(users, userIndex, searchBar.getText(), "dateQuery");
+				}
+				Scene searchScene = new Scene(root);
+				Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
+				window.setScene(searchScene);
+				window.setTitle("Search");
+				window.show();
 			}
-			Scene searchScene = new Scene(root);
-			Stage window = (Stage)((Node)event.getSource()).getScene().getWindow();	
-			window.setScene(searchScene);
-			window.setTitle("Search");
-			window.show();
+			
 		}
 	}
 	
-	//new album button
+	/**
+	 * Method to create new album
+	 * @param event New Album Button is pressed
+	 * @throws IOException
+	 */
 	//text input dialogue pops up for user to enter name of new album
 	public void newAlbumButton(ActionEvent event) throws IOException{
 		TextInputDialog dialog = new TextInputDialog();
@@ -219,7 +264,10 @@ public class AlbumDisplayController implements Serializable {
 		writeApp(users);
 	}
 	
-	//rename album button
+	/**
+	 * Method to rename album that already exists
+	 * @param event Rename Album Button is presses
+	 */
 	//text input dialogue pops up for user to enter new name of album
 	public void renameAlbumButton(ActionEvent event){
 		//TODO: get album name and display it in text box initially
@@ -255,6 +303,10 @@ public class AlbumDisplayController implements Serializable {
 		}
 	}
 	
+	/**
+	 * Method to delete selected album
+	 * @param event Delete Album Button is presses
+	 */
 	//delete album button - deletes selected album
 	public void deleteAlbumButton(ActionEvent event){
 		Alert alert = new Alert(AlertType.CONFIRMATION);
@@ -271,7 +323,10 @@ public class AlbumDisplayController implements Serializable {
 			}
 		} 
 	}
-	
+
+	/**
+	 * Method to send an error message in a pop up alert box if input in invalid
+	*/
 	//error alert for invalid inputs
 	public void errorMessage() {
 		Alert alert = new Alert(AlertType.ERROR);
@@ -281,6 +336,9 @@ public class AlbumDisplayController implements Serializable {
 		alert.showAndWait();
 	}
 	
+	/**
+	 * Method to disable buttons
+	 */
 	//disable buttons when list is empty
 	public void disable() {
 		renameAlbumButton.setDisable(true);
@@ -289,6 +347,9 @@ public class AlbumDisplayController implements Serializable {
 		openAlbumButton.setDisable(true);
 	}
 	
+	/*
+	 * Method to set buttons to be able to be clicked
+	 */
 	//able buttons when list is not empty anymore
 	public void able() {
 		renameAlbumButton.setDisable(false);
@@ -297,6 +358,9 @@ public class AlbumDisplayController implements Serializable {
 		openAlbumButton.setDisable(false);
 	}
 	
+	/**
+	 * Method to set stock photos in stock user in stock album
+	 */
 	public void setStockPhotos() {
   		Photo s1 = new Photo("stock1", null, null);
 		File file = new File("C:\\Users\\kmist\\eclipse-workspace\\photos03\\src\\stockPhotos\\binary.jpg");
@@ -371,6 +435,11 @@ public class AlbumDisplayController implements Serializable {
 			
   	}
 	
+	/**
+	 * Method to convert Calendar date into a string
+	 * @param c Date of photo
+	 * @return String format of the date
+	 */
 	public String date(Calendar c) {
 		int month = c.get(Calendar.MONTH) + 1;
 		int day = c.get(Calendar.DAY_OF_MONTH);
@@ -378,9 +447,18 @@ public class AlbumDisplayController implements Serializable {
 		return month + "-" + day + "-" + year;
 	}
 	
+	/**
+	 * String field to store directory
+	 * String field to store file
+	 */
 	public static final String storeDir = "docs";
 	public static final String storeFile = "users.ser"; 
 	
+	/**
+	 * Method to serialize and write users to file
+	 * @param users List of users
+	 * @throws IOException
+	 */
 	public static void writeApp(List<User> users) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
 		oos.writeObject(users);

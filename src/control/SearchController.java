@@ -46,12 +46,24 @@ public class SearchController {
 	@FXML private Label searchRes;
 	@FXML private ImageView clickedImageView;
 	
+	/**
+	 * Observable List of photos that match the search criteria
+	 * List of users 
+	 * int field of index of user that is logged in
+	 * String field of what is searched
+	 */
 	private ObservableList<Photo> obsList;
-	
 	private List<User> users;
 	private int userIndex;
 	private String searchQuery;
 	
+	/**
+	 * Method to get list of users, index of user logged in, string that is searched, and string of search type
+	 * @param user List of users
+	 * @param index Index of user logged in
+	 * @param query String of what was searched
+	 * @param queryType String of type of search (by tag or by date)
+	 */
 	//gets selected user and search query from the album display controller
 	public void initData(List<User> user, int index, String query, String queryType) {
 		//initialize the list of users and what user we are logged into
@@ -90,6 +102,9 @@ public class SearchController {
 		}
 	}
 	
+	/**
+	 * Method to set caption, date/time, tags labels and image view to the selected photo
+	 */
 	public void showPhotoDetails(){
 		dateTime.setText(listView.getSelectionModel().getSelectedItem().getDate().getTime().toString());
 		caption.setText(listView.getSelectionModel().getSelectedItem().getCaption());
@@ -110,6 +125,9 @@ public class SearchController {
 		}
 	}
 	
+	/**
+	 * Method search by tag type and tag values
+	 */
 	//if the user selected search by tag
 	private void searchByTag() {
 		//split the query up if it is a conjuctive/disjunctive whatever
@@ -131,6 +149,10 @@ public class SearchController {
 		}
 	}
 	
+	/**
+	 * Method to search by one tag only
+	 * @param args Array of strings of what was searched 
+	 */
 	//the user only entered a single search item for a tag
 	private void singleArgTagSearch(String args[]) {
 		Tag t = null;
@@ -159,6 +181,10 @@ public class SearchController {
 		}
 	}
 	
+	/**
+	 * Method to search by two tags in a conjunction (AND)
+	 * @param args Array of strings of what was searched 
+	 */
 	//and search
 	private void andTagSearch(String args[]) {
 		Tag t1 = null;
@@ -202,6 +228,10 @@ public class SearchController {
 		}
 	}
 	
+	/**
+	 * Method to search by two tags in a disjunction (OR)
+	 * @param args Array of strings of what was searched
+	 */
 	//or search
 	private void orTagSearch(String args[]) {
 		Tag t1 = null;
@@ -240,6 +270,9 @@ public class SearchController {
 		}
 	}
 
+	/**
+	 * Method to search by date
+	 */
 	private void searchByDate() {
 		//split the query up by spaces, should be of XX-XX-XXXX TO XX-XX-XXXX
 		String args[] = searchQuery.split(" ");
@@ -273,6 +306,9 @@ public class SearchController {
 		}
 	}
 	
+	/**
+	 * Method to display images in list of photos
+	 */
 	public void listCellFactory() {
 		listView.setCellFactory(param -> new ListCell<Photo>() {
             @Override
@@ -298,6 +334,11 @@ public class SearchController {
 
 	}
 	
+	/**
+	 * Method to load album display scene
+	 * @param event Back button is pressed
+	 * @throws Exception
+	 */
 	//back button to go back to album display scene
 	public void backButton(ActionEvent event) throws Exception {
 		writeApp(users);
@@ -315,6 +356,10 @@ public class SearchController {
 		window.show();
 	}
 	
+	/**
+	 * Method to create an album from the photos in the search results
+	 * @param event Create album button is pressed
+	 */
 	//create new album from search results button
 	//text input dialogue pops up for user to enter name of new album created from search results
 	public void createAlbumButton(ActionEvent event) {
@@ -368,6 +413,11 @@ public class SearchController {
 		}
 	}
 	
+	/**
+	 * Method to convert Calendar date into a string
+	 * @param c Date of photo
+	 * @return String format of the date
+	 */
 	public String date(Calendar c) {
 		int month = c.get(Calendar.MONTH) + 1;
 		int day = c.get(Calendar.DAY_OF_MONTH);
@@ -375,18 +425,29 @@ public class SearchController {
 		return month + "-" + day + "-" + year;
 	}
 	
+	/**
+	 * Method to go to the photo after to the selected photo in the photo list
+	 * @param event > button is pressed
+	 */
 	//Next Photo Button
 	public void nextPhotoButton(ActionEvent event) {
 		int index = listView.getSelectionModel().getSelectedIndex() + 1;
 		listView.getSelectionModel().select(index);
 	}
 	
+	/**
+	 * * Method to go to the photo previous to the selected photo in the photo list
+	 * @param event < button is pressed
+	 */
 	//Previous Photo Button
 	public void previousPhotoButton(ActionEvent event) {
 		int index = listView.getSelectionModel().getSelectedIndex() - 1;
 		listView.getSelectionModel().select(index);
 	}
 	
+	/**
+	 * Method to send an error message in a pop up alert box if input in invalid
+	 */
 	//error alert for invalid inputs
 	public void errorMessage() {
 		Alert alert = new Alert(AlertType.ERROR);
@@ -396,6 +457,10 @@ public class SearchController {
 		alert.showAndWait();
 	}
 	
+	/**
+	 * Method to disable/able buttons
+	 * @param tf True to disable button, false to able buttons
+	 */
 	public void disableStuff(boolean tf) {
 		createAlbumButton.setDisable(tf);
 		previousPhotoButton.setDisable(tf);
@@ -403,9 +468,18 @@ public class SearchController {
 		listView.setDisable(tf);
 	}
 	
+	/**
+	 * String field to store directory
+	 * String field to store file
+	 */
 	public static final String storeDir = "docs";
 	public static final String storeFile = "users.ser"; 
 	
+	/**
+	 * Method to serialize and write users to file
+	 * @param usersList List of users
+	 * @throws IOException
+	 */
 	public static void writeApp(List<User> users) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
 		oos.writeObject(users);
