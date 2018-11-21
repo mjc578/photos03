@@ -10,6 +10,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import javafx.application.Application;
@@ -33,8 +35,10 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import model.AlbumInfo;
+import model.Photo;
 import model.User;
 
 public class AlbumDisplayController implements Serializable {
@@ -69,10 +73,10 @@ public class AlbumDisplayController implements Serializable {
 		listView.setItems(obsList);
 		
 		if(users.get(userIndex).getUsername().equals("stock") && obsList.size()==0) {
-			AlbumInfo stock = new AlbumInfo("stock", 5, "11-20-2018", "11-20-2018");
+			AlbumInfo stock = new AlbumInfo("stock", 0, null, null);
 			obsList.add(stock);
 			users.get(userIndex).getUserAlbums().add(stock);
-			
+			setStockPhotos();
 		}
 		
 		if (obsList.isEmpty() && obsList != null) {
@@ -291,6 +295,87 @@ public class AlbumDisplayController implements Serializable {
 		deleteAlbumButton.setDisable(false);
 		deleteAlbumButton.setDisable(false);
 		openAlbumButton.setDisable(false);
+	}
+	
+	public void setStockPhotos() {
+  		Photo s1 = new Photo("stock1", null, null);
+		File file = new File("C:\\Users\\kmist\\eclipse-workspace\\photos03\\src\\stockPhotos\\binary.jpg");
+		s1.setURL(file.getAbsolutePath());
+		Image imageForFile = new Image("file:" + s1.getURL());
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date(file.lastModified()));
+		c.set(Calendar.MILLISECOND, 0);
+		s1.setDate(c);
+		users.get(userIndex).getUserAlbums().get(0).addPhoto(s1);
+		
+		Photo s2 = new Photo("stock2", null, null);
+		File file2 = new File("C:\\Users\\kmist\\eclipse-workspace\\photos03\\src\\stockPhotos\\binary2.jpg");
+		s2.setURL(file2.getAbsolutePath());
+		Image imageForFile2 = new Image("file:" + s2.getURL());
+		Calendar c2 = Calendar.getInstance();
+		c2.setTime(new Date(file.lastModified()));
+		c2.set(Calendar.MILLISECOND, 0);
+		s2.setDate(c2);
+		users.get(userIndex).getUserAlbums().get(0).addPhoto(s2);
+		
+		Photo s3 = new Photo("stock3", null, null);
+		File file3 = new File("C:\\Users\\kmist\\eclipse-workspace\\photos03\\src\\stockPhotos\\button.jpg");
+		s3.setURL(file3.getAbsolutePath());
+		Image imageForFile3 = new Image("file:" + s3.getURL());
+		Calendar c3 = Calendar.getInstance();
+		c3.setTime(new Date(file.lastModified()));
+		c3.set(Calendar.MILLISECOND, 0);
+		s3.setDate(c3);
+		users.get(userIndex).getUserAlbums().get(0).addPhoto(s3);
+		
+		Photo s4 = new Photo("stock4", null, null);
+		File file4 = new File("C:\\Users\\kmist\\eclipse-workspace\\photos03\\src\\stockPhotos\\code.jpg");
+		s4.setURL(file4.getAbsolutePath());
+		Image imageForFile4 = new Image("file:" + s4.getURL());
+		Calendar c4 = Calendar.getInstance();
+		c4.setTime(new Date(file.lastModified()));
+		c4.set(Calendar.MILLISECOND, 0);
+		s4.setDate(c4);
+		users.get(userIndex).getUserAlbums().get(0).addPhoto(s4);
+		
+		Photo s5 = new Photo("stock5", null, null);
+		File file5 = new File("C:\\Users\\kmist\\eclipse-workspace\\photos03\\src\\stockPhotos\\robot.jpg");
+		s5.setURL(file5.getAbsolutePath());
+		Image imageForFile5 = new Image("file:" + s5.getURL());
+		Calendar c5 = Calendar.getInstance();
+		c5.setTime(new Date(file.lastModified()));
+		c5.set(Calendar.MILLISECOND, 0);
+		s5.setDate(c5);
+		users.get(userIndex).getUserAlbums().get(0).addPhoto(s5);
+		
+		
+		users.get(userIndex).getUserAlbums().get(0).setNumPhotos(users.get(userIndex).getUserAlbums().get(0).getPhotos().size());
+
+		Calendar earliestPic = Calendar.getInstance();
+		Calendar latestPic = Calendar.getInstance();
+		
+		earliestPic.setTime(users.get(userIndex).getUserAlbums().get(0).getPhotos().get(0).getDate().getTime());
+		latestPic.setTime(users.get(userIndex).getUserAlbums().get(0).getPhotos().get(0).getDate().getTime());
+		for(int i = 0; i < users.get(userIndex).getUserAlbums().get(0).getPhotos().size(); i++) {
+			if (users.get(userIndex).getUserAlbums().get(0).getPhotos().get(i).getDate().getTime().compareTo(earliestPic.getTime())<=0) {
+				earliestPic.setTime(users.get(userIndex).getUserAlbums().get(0).getPhotos().get(i).getDate().getTime());
+				String earliestDate = date(earliestPic);
+				users.get(userIndex).getUserAlbums().get(0).setStartDateRange(earliestDate);
+			}
+			if (users.get(userIndex).getUserAlbums().get(0).getPhotos().get(i).getDate().getTime().compareTo(latestPic.getTime())>=0) {
+				latestPic.setTime(users.get(userIndex).getUserAlbums().get(0).getPhotos().get(i).getDate().getTime());
+				String latestDate = date(latestPic);
+				users.get(userIndex).getUserAlbums().get(0).setEndDateRange(latestDate);
+			}
+		}
+			
+  	}
+	
+	public String date(Calendar c) {
+		int month = c.get(Calendar.MONTH) + 1;
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		int year = c.get(Calendar.YEAR);
+		return month + "-" + day + "-" + year;
 	}
 	
 	public static final String storeDir = "docs";

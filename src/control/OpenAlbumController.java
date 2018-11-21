@@ -76,20 +76,11 @@ public class OpenAlbumController {
   		obsList = FXCollections.observableArrayList(users.get(userIndex).getUserAlbums().get(albumIndex).getPhotos());
   		listView.setItems(obsList);
   		listView.getSelectionModel().select(0);
-  		
-  		
-  		if (users.get(userIndex).getUsername().equals("stock") && users.get(userIndex).getUserAlbums().get(albumIndex).getName().equals("stock") && obsList.size()==0) {
-  			setStockPhotos();
-  			listView.getSelectionModel().select(0);
-  			showPhotoDetails();
-  			
-  			
-  		}
 
-  		else if (obsList != null && !obsList.isEmpty()) {
+  		if (obsList != null && !obsList.isEmpty()) {
 			showPhotoDetails();
 		}
-  		else if (obsList.isEmpty() && obsList != null) {
+  		if (obsList.isEmpty() && obsList != null) {
         	disable(true);
         }
   		//listener for showing the photo details if they are clicked on
@@ -428,69 +419,6 @@ public class OpenAlbumController {
 		copyButton.setDisable(tf);
 		moveButton.setDisable(tf);	
 	}
-	
-	public void setStockPhotos() {
-  		Photo s1 = new Photo("stock1", null, null);
-		File file = new File("C:\\Users\\kmist\\eclipse-workspace\\photos03\\src\\stockPhotos\\binary.jpg");
-		s1.setURL(file.getAbsolutePath());
-		Image imageForFile = new Image("file:" + s1.getURL());
-		Calendar c = Calendar.getInstance();
-		c.setTime(new Date(file.lastModified()));
-		c.set(Calendar.MILLISECOND, 0);
-		s1.setDate(c);
-		obsList.add(s1);
-		users.get(userIndex).getUserAlbums().get(albumIndex).addPhoto(s1);
-		
-		Photo s2 = new Photo("stock2", null, null);
-		File file2 = new File("C:\\Users\\kmist\\eclipse-workspace\\photos03\\src\\stockPhotos\\binary2.jpg");
-		s2.setURL(file2.getAbsolutePath());
-		Image imageForFile2 = new Image("file:" + s2.getURL());
-		Calendar c2 = Calendar.getInstance();
-		c2.setTime(new Date(file.lastModified()));
-		c2.set(Calendar.MILLISECOND, 0);
-		s2.setDate(c2);
-		obsList.add(s2);
-		users.get(userIndex).getUserAlbums().get(albumIndex).addPhoto(s2);
-		
-		Photo s3 = new Photo("stock3", null, null);
-		File file3 = new File("C:\\Users\\kmist\\eclipse-workspace\\photos03\\src\\stockPhotos\\button.jpg");
-		s3.setURL(file3.getAbsolutePath());
-		Image imageForFile3 = new Image("file:" + s3.getURL());
-		Calendar c3 = Calendar.getInstance();
-		c3.setTime(new Date(file.lastModified()));
-		c3.set(Calendar.MILLISECOND, 0);
-		s3.setDate(c3);
-		obsList.add(s3);
-		users.get(userIndex).getUserAlbums().get(albumIndex).addPhoto(s3);
-		
-		Photo s4 = new Photo("stock4", null, null);
-		File file4 = new File("C:\\Users\\kmist\\eclipse-workspace\\photos03\\src\\stockPhotos\\code.jpg");
-		s4.setURL(file4.getAbsolutePath());
-		Image imageForFile4 = new Image("file:" + s4.getURL());
-		Calendar c4 = Calendar.getInstance();
-		c4.setTime(new Date(file.lastModified()));
-		c4.set(Calendar.MILLISECOND, 0);
-		s4.setDate(c4);
-		obsList.add(s4);
-		users.get(userIndex).getUserAlbums().get(albumIndex).addPhoto(s4);
-		
-		Photo s5 = new Photo("stock5", null, null);
-		File file5 = new File("C:\\Users\\kmist\\eclipse-workspace\\photos03\\src\\stockPhotos\\robot.jpg");
-		s5.setURL(file5.getAbsolutePath());
-		Image imageForFile5 = new Image("file:" + s5.getURL());
-		Calendar c5 = Calendar.getInstance();
-		c5.setTime(new Date(file.lastModified()));
-		c5.set(Calendar.MILLISECOND, 0);
-		s5.setDate(c5);
-		obsList.add(s5);
-		users.get(userIndex).getUserAlbums().get(albumIndex).addPhoto(s5);
-		
-		
-		users.get(userIndex).getUserAlbums().get(albumIndex).setNumPhotos(obsList.size());
-		listCellFactory();
-		setAlbumDates();
-			
-  	}
 	
 	public static void writeApp(List<User> tagApp) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
