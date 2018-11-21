@@ -69,7 +69,7 @@ public class AlbumDisplayController implements Serializable {
 		listView.setItems(obsList);
 		
 		if(users.get(userIndex).getUsername().equals("stock") && obsList.size()==0) {
-			AlbumInfo stock = new AlbumInfo("stock", 5, "11/20/2018", "11/20/2018");
+			AlbumInfo stock = new AlbumInfo("stock", 5, "11-20-2018", "11-20-2018");
 			obsList.add(stock);
 			users.get(userIndex).getUserAlbums().add(stock);
 			
