@@ -169,7 +169,7 @@ public class OpenAlbumController {
 	/**
 	 * Method to add photo to list of photos
 	 * @param event Add button is pressed
-	 * @throws MalformedURLException
+	 * @throws MalformedURLException catch exceptions
 	 */
 	//add photo button
 	public void addButton(ActionEvent event) throws MalformedURLException{
@@ -182,7 +182,6 @@ public class OpenAlbumController {
 			return;
 		}
 		p.setURL(file.getAbsolutePath());
-		System.out.println(p.getURL());
 		Image imageForFile = new Image("file:" + p.getURL());
 		//sets the clicked image view as this image
 		clickedImageView.setImage(imageForFile);

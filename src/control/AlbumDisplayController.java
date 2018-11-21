@@ -6,6 +6,7 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
@@ -128,7 +129,7 @@ public class AlbumDisplayController implements Serializable {
 	/**
 	 * Method to load login scene
 	 * @param event Logout Button is pressed
-	 * @throws Exception
+	 * @throws Exception catch excptions
 	 */
 	public void logOutButton(ActionEvent event) throws Exception {
 		writeApp(users);
@@ -143,7 +144,7 @@ public class AlbumDisplayController implements Serializable {
 	/**
 	 * Method to load open album scene
 	 * @param event Open Album Button is pressed
-	 * @throws Exception
+	 * @throws Exception catch exceptions
 	 */
 	public void openAlbumButton(ActionEvent event) throws Exception{
 		writeApp(users);
@@ -163,8 +164,8 @@ public class AlbumDisplayController implements Serializable {
 	
 	/**
 	 * Method to load search scene
-	 * @param event
-	 * @throws Exception
+	 * @param event New event
+	 * @throws Exception catch exceptions
 	 */
 	public void searchButton(ActionEvent event) throws Exception {
 		//checks if there is text in search bar
@@ -230,7 +231,7 @@ public class AlbumDisplayController implements Serializable {
 	/**
 	 * Method to create new album
 	 * @param event New Album Button is pressed
-	 * @throws IOException
+	 * @throws IOException catch exceptions
 	 */
 	//text input dialogue pops up for user to enter name of new album
 	public void newAlbumButton(ActionEvent event) throws IOException{
@@ -364,9 +365,8 @@ public class AlbumDisplayController implements Serializable {
 	 */
 	public void setStockPhotos() {
   		Photo s1 = new Photo("stock1", null, null);
-		File file = new File("C:\\Users\\kmist\\eclipse-workspace\\photos03\\src\\stockPhotos\\binary.jpg");
+		File file = new File(".\\src\\stockPhotos\\binary.jpg");
 		s1.setURL(file.getAbsolutePath());
-		Image imageForFile = new Image("file:" + s1.getURL());
 		Calendar c = Calendar.getInstance();
 		c.setTime(new Date(file.lastModified()));
 		c.set(Calendar.MILLISECOND, 0);
@@ -374,9 +374,8 @@ public class AlbumDisplayController implements Serializable {
 		users.get(userIndex).getUserAlbums().get(0).addPhoto(s1);
 		
 		Photo s2 = new Photo("stock2", null, null);
-		File file2 = new File("C:\\Users\\kmist\\eclipse-workspace\\photos03\\src\\stockPhotos\\binary2.jpg");
+		File file2 = new File(".\\src\\stockPhotos\\binary2.jpg");
 		s2.setURL(file2.getAbsolutePath());
-		Image imageForFile2 = new Image("file:" + s2.getURL());
 		Calendar c2 = Calendar.getInstance();
 		c2.setTime(new Date(file.lastModified()));
 		c2.set(Calendar.MILLISECOND, 0);
@@ -384,9 +383,8 @@ public class AlbumDisplayController implements Serializable {
 		users.get(userIndex).getUserAlbums().get(0).addPhoto(s2);
 		
 		Photo s3 = new Photo("stock3", null, null);
-		File file3 = new File("C:\\Users\\kmist\\eclipse-workspace\\photos03\\src\\stockPhotos\\button.jpg");
+		File file3 = new File(".\\src\\stockPhotos\\button.jpg");
 		s3.setURL(file3.getAbsolutePath());
-		Image imageForFile3 = new Image("file:" + s3.getURL());
 		Calendar c3 = Calendar.getInstance();
 		c3.setTime(new Date(file.lastModified()));
 		c3.set(Calendar.MILLISECOND, 0);
@@ -394,9 +392,8 @@ public class AlbumDisplayController implements Serializable {
 		users.get(userIndex).getUserAlbums().get(0).addPhoto(s3);
 		
 		Photo s4 = new Photo("stock4", null, null);
-		File file4 = new File("C:\\Users\\kmist\\eclipse-workspace\\photos03\\src\\stockPhotos\\code.jpg");
+		File file4 = new File(".\\src\\stockPhotos\\code.jpg");
 		s4.setURL(file4.getAbsolutePath());
-		Image imageForFile4 = new Image("file:" + s4.getURL());
 		Calendar c4 = Calendar.getInstance();
 		c4.setTime(new Date(file.lastModified()));
 		c4.set(Calendar.MILLISECOND, 0);
@@ -404,9 +401,8 @@ public class AlbumDisplayController implements Serializable {
 		users.get(userIndex).getUserAlbums().get(0).addPhoto(s4);
 		
 		Photo s5 = new Photo("stock5", null, null);
-		File file5 = new File("C:\\Users\\kmist\\eclipse-workspace\\photos03\\src\\stockPhotos\\robot.jpg");
+		File file5 = new File(".\\src\\stockPhotos\\robot.jpg");
 		s5.setURL(file5.getAbsolutePath());
-		Image imageForFile5 = new Image("file:" + s5.getURL());
 		Calendar c5 = Calendar.getInstance();
 		c5.setTime(new Date(file.lastModified()));
 		c5.set(Calendar.MILLISECOND, 0);
@@ -458,10 +454,11 @@ public class AlbumDisplayController implements Serializable {
 	/**
 	 * Method to serialize and write users to file
 	 * @param users List of users
-	 * @throws IOException
+	 * @throws IOException catch exceptions
 	 */
 	public static void writeApp(List<User> users) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));
 		oos.writeObject(users);
+		oos.close();
 	} 
 }

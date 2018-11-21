@@ -193,7 +193,7 @@ public class EditController implements Serializable {
 	/**
 	 * Method to add a tag type
 	 * @param event Add tag type button is pressed
-	 * @throws IOException
+	 * @throws IOException catch exceptions
 	 */
 	//add tag-type button
 	public void addTagTypeButton(ActionEvent event) throws IOException {
@@ -228,7 +228,7 @@ public class EditController implements Serializable {
 				if(result2.isPresent()) {
 					TagType tt;
 					//tag type is multi valued
-					if(result2.equals("Yes")) {
+					if(result2.get().equals("Yes")) {
 						tt = new TagType(result.get(), true);
 					}
 					//otherwise, it is not multivalued
@@ -251,7 +251,7 @@ public class EditController implements Serializable {
 	/**
 	 * Method to confirm all the changes made to caption and tags
 	 * @param event Confirm button is pressed
-	 * @throws IOException
+	 * @throws IOException catch exceptions
 	 */
 	//confirm button to confirm edited caption, tags, and tag-types
 	public void confirmButton(ActionEvent event) throws IOException {
@@ -283,7 +283,7 @@ public class EditController implements Serializable {
 	/**
 	 * Method to cancel all the changes made to caption and tags
 	 * @param event Cancel button is pressed
-	 * @throws Exception
+	 * @throws Exception catch exceptions
 	 */
 	//cancel button to cancel edited caption, tags, and tag-types
 	//go back to open album scene
@@ -335,7 +335,7 @@ public class EditController implements Serializable {
 	/**
 	 * Method to serialize and write users to file
 	 * @param usersList List of users
-	 * @throws IOException
+	 * @throws IOException catch exceptions
 	 */
 	public static void writeApp(List<User> usersList) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));

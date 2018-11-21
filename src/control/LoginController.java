@@ -44,7 +44,7 @@ public class LoginController implements Serializable{
 	/**
 	 * Method to initialize the scene
 	 * @throws ClassNotFoundException
-	 * @throws IOException
+	 * @throws IOException catch exceptions
 	 */
 	//first thing that happens when scene is loaded
 	public void initialize() throws ClassNotFoundException, IOException {
@@ -70,8 +70,8 @@ public class LoginController implements Serializable{
 
 	/**
 	 * Method to load album display scene or admin scene
-	 * @param event
-	 * @throws Exception
+	 * @param event event
+	 * @throws Exception catch exceptions
 	 */
 	//Login Button 
 	public void loginButton(ActionEvent event) throws Exception {
@@ -142,8 +142,8 @@ public class LoginController implements Serializable{
 	/**
 	 * Method to serialize and read users from file
 	 * @return ArrayList of users
-	 * @throws IOException
-	 * @throws ClassNotFoundException
+	 * @throws IOException catch exceptions
+	 * @throws ClassNotFoundException catch exceptions
 	 */
 	public static ArrayList<User> readApp() throws IOException, ClassNotFoundException {
 		
