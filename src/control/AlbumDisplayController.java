@@ -67,14 +67,16 @@ public class AlbumDisplayController implements Serializable {
 		//set the obslist on list of albums and set the list view
 		obsList = FXCollections.observableArrayList(users.get(userIndex).getUserAlbums());
 		listView.setItems(obsList);
-		if (obsList.isEmpty() && obsList != null) {
-			disable();
-		}
 		
 		if(users.get(userIndex).getUsername().equals("stock") && obsList.size()==0) {
-			AlbumInfo stock = new AlbumInfo("stock", 0, "*", "*");
+			AlbumInfo stock = new AlbumInfo("stock", 5, "11/20/2018", "11/20/2018");
 			obsList.add(stock);
 			users.get(userIndex).getUserAlbums().add(stock);
+			
+		}
+		
+		if (obsList.isEmpty() && obsList != null) {
+			disable();
 		}
 		
 		listView.getSelectionModel().select(0);
