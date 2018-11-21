@@ -80,7 +80,7 @@ public class AlbumDisplayController implements Serializable {
 		}
 		
 		listView.getSelectionModel().select(0);
-		searchBar.setPromptText("example: person=sesh || person=sesh OR location=prague || person=sesh AND location=prague");
+		searchBar.setPromptText("person=sesh || person=sesh OR/AND location=prague");
 		
 		//set the radiobuttons
 		tagRadioButton.setToggleGroup(group);
@@ -92,10 +92,10 @@ public class AlbumDisplayController implements Serializable {
 		
 		group.selectedToggleProperty().addListener((observable, oldVal, newVal) -> {
 			if(newVal.getUserData().equals("Tag")) {
-				searchBar.setPromptText("example: person=sesh || person=sesh OR location=prague || person=sesh AND location=prague");
+				searchBar.setPromptText("person=sesh || person=sesh OR/AND location=prague");
 			}
 			else {
-				searchBar.setPromptText("MM/DD/YYYY to MM/DD/YYYY");
+				searchBar.setPromptText("Format: MM-DD-YYYY to MM-DD-YYYY");
 			}
 		});
 
