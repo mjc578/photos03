@@ -337,7 +337,7 @@ public class SearchController {
 	/**
 	 * Method to load album display scene
 	 * @param event Back button is pressed
-	 * @throws Exception
+	 * @throws Exception catch exception
 	 */
 	//back button to go back to album display scene
 	public void backButton(ActionEvent event) throws Exception {
@@ -478,7 +478,7 @@ public class SearchController {
 	/**
 	 * Method to serialize and write users to file
 	 * @param usersList List of users
-	 * @throws IOException
+	 * @throws IOException catch exception
 	 */
 	public static void writeApp(List<User> users) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));

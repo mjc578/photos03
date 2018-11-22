@@ -147,7 +147,7 @@ public class OpenAlbumController {
 	/**
 	 * Method to load album display scene
 	 * @param event Back button is pressed
-	 * @throws Exception
+	 * @throws Exception catch exception
 	 */
 	//back button takes you back to Album Display scene
 	public void backButton(ActionEvent event) throws Exception{
@@ -381,7 +381,7 @@ public class OpenAlbumController {
 	/**
 	 * Method to go to edit scene
 	 * @param event Edit button is pressed
-	 * @throws Exception
+	 * @throws Exception catch exception
 	 */
 	// edit button - takes you to edit scene
 	// edit scene allows you to edit caption, add tags, add tag-types, and delete tags
@@ -499,7 +499,7 @@ public class OpenAlbumController {
 	/**
 	 * Method to serialize and write users to file
 	 * @param tagApp List of users
-	 * @throws IOException
+	 * @throws IOException catch exception
 	 */
 	public static void writeApp(List<User> tagApp) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));

@@ -72,7 +72,7 @@ public class AdminController implements Serializable {
 	/**
 	 * Method to logout of admin
 	 * @param event Logout button is pressed
-	 * @throws Exception
+	 * @throws Exception Catch exception
 	 */
 	//goes back to login screen
 	public void logOutButton(ActionEvent event) throws Exception {
@@ -165,7 +165,7 @@ public class AdminController implements Serializable {
 	/**
 	 * Method to serialize and write users to file
 	 * @param users List of users
-	 * @throws IOException
+	 * @throws IOException Catch exception
 	 */
 	public static void writeApp(List<User> users) throws IOException {
 		ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(storeDir + File.separator + storeFile));

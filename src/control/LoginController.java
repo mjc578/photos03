@@ -10,6 +10,8 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import javafx.collections.FXCollections;
@@ -25,6 +27,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import model.AlbumInfo;
+import model.Photo;
 import model.User;
 import javafx.scene.Parent;
 import javafx.scene.Node;
@@ -43,7 +46,7 @@ public class LoginController implements Serializable{
 	
 	/**
 	 * Method to initialize the scene
-	 * @throws ClassNotFoundException
+	 * @throws ClassNotFoundException catch exception
 	 * @throws IOException catch exceptions
 	 */
 	//first thing that happens when scene is loaded
@@ -54,6 +57,9 @@ public class LoginController implements Serializable{
 			users = new ArrayList<User>();
 			User stock = new User("stock");
 			users.add(stock);
+			AlbumInfo stockAlbum = new AlbumInfo("stock", 0, null, null);
+			users.get(0).getUserAlbums().add(stockAlbum);
+			setStockPhotos();
 		}
 		
 		loginButton.setDisable(true);
@@ -159,6 +165,91 @@ public class LoginController implements Serializable{
 		ois.close();
 		return user;
 	}
+	
+	/**
+	 * Method to set stock photos in stock user in stock album
+	 */
+
+	public void setStockPhotos() {
+  		Photo s1 = new Photo("stock1", null, null);
+		File file = new File(".\\src\\stockPhotos\\binary.jpg");
+		s1.setURL(file.getAbsolutePath());
+		Calendar c = Calendar.getInstance();
+		c.setTime(new Date(file.lastModified()));
+		c.set(Calendar.MILLISECOND, 0);
+		s1.setDate(c);
+		users.get(0).getUserAlbums().get(0).addPhoto(s1);
+		
+		Photo s2 = new Photo("stock2", null, null);
+		File file2 = new File(".\\src\\stockPhotos\\binary2.jpg");
+		s2.setURL(file2.getAbsolutePath());
+		Calendar c2 = Calendar.getInstance();
+		c2.setTime(new Date(file.lastModified()));
+		c2.set(Calendar.MILLISECOND, 0);
+		s2.setDate(c2);
+		users.get(0).getUserAlbums().get(0).addPhoto(s2);
+		
+		Photo s3 = new Photo("stock3", null, null);
+		File file3 = new File(".\\src\\stockPhotos\\button.jpg");
+		s3.setURL(file3.getAbsolutePath());
+		Calendar c3 = Calendar.getInstance();
+		c3.setTime(new Date(file.lastModified()));
+		c3.set(Calendar.MILLISECOND, 0);
+		s3.setDate(c3);
+		users.get(0).getUserAlbums().get(0).addPhoto(s3);
+		
+		Photo s4 = new Photo("stock4", null, null);
+		File file4 = new File(".\\src\\stockPhotos\\code.jpg");
+		s4.setURL(file4.getAbsolutePath());
+		Calendar c4 = Calendar.getInstance();
+		c4.setTime(new Date(file.lastModified()));
+		c4.set(Calendar.MILLISECOND, 0);
+		s4.setDate(c4);
+		users.get(0).getUserAlbums().get(0).addPhoto(s4);
+		
+		Photo s5 = new Photo("stock5", null, null);
+		File file5 = new File(".\\src\\stockPhotos\\robot.jpg");
+		s5.setURL(file5.getAbsolutePath());
+		Calendar c5 = Calendar.getInstance();
+		c5.setTime(new Date(file.lastModified()));
+		c5.set(Calendar.MILLISECOND, 0);
+		s5.setDate(c5);
+		users.get(0).getUserAlbums().get(0).addPhoto(s5);
+		
+		
+		users.get(0).getUserAlbums().get(0).setNumPhotos(users.get(0).getUserAlbums().get(0).getPhotos().size());
+
+		Calendar earliestPic = Calendar.getInstance();
+		Calendar latestPic = Calendar.getInstance();
+		
+		earliestPic.setTime(users.get(0).getUserAlbums().get(0).getPhotos().get(0).getDate().getTime());
+		latestPic.setTime(users.get(0).getUserAlbums().get(0).getPhotos().get(0).getDate().getTime());
+		for(int i = 0; i < users.get(0).getUserAlbums().get(0).getPhotos().size(); i++) {
+			if (users.get(0).getUserAlbums().get(0).getPhotos().get(i).getDate().getTime().compareTo(earliestPic.getTime())<=0) {
+				earliestPic.setTime(users.get(0).getUserAlbums().get(0).getPhotos().get(i).getDate().getTime());
+				String earliestDate = date(earliestPic);
+				users.get(0).getUserAlbums().get(0).setStartDateRange(earliestDate);
+			}
+			if (users.get(0).getUserAlbums().get(0).getPhotos().get(i).getDate().getTime().compareTo(latestPic.getTime())>=0) {
+				latestPic.setTime(users.get(0).getUserAlbums().get(0).getPhotos().get(i).getDate().getTime());
+				String latestDate = date(latestPic);
+				users.get(0).getUserAlbums().get(0).setEndDateRange(latestDate);
+			}
+		}	
+  	}
+	
+	/**
+	 * Method to convert Calendar date into a string
+	 * @param c Date of photo
+	 * @return String format of the date
+	 */
+	public String date(Calendar c) {
+		int month = c.get(Calendar.MONTH) + 1;
+		int day = c.get(Calendar.DAY_OF_MONTH);
+		int year = c.get(Calendar.YEAR);
+		return month + "-" + day + "-" + year;
+	}
+	
 
 	
 	
